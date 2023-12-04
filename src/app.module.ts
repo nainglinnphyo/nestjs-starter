@@ -1,12 +1,11 @@
+/* eslint-disable import/order */
+/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 // Import required modules
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { configuration } from './config/index';
 
 // Import filters
 import {
@@ -18,23 +17,15 @@ import {
   ValidationExceptionFilter,
 } from './core/filters';
 import { AppConfig } from './config/app.config';
-import { PaginationModule } from '@core/common/pagination/pagination.module';
-
-// Import other modules
+import { CommonModule } from '@core/common/common.module';
 
 @Module({
   imports: [
-    PaginationModule,
-    // Configure environment variables
-    ConfigModule.forRoot({
-      isGlobal: true, // Make the configuration global
-      load: [configuration], // Load the environment variables from the configuration file
-    }),
-
+    CommonModule,
     // Configure logging
     LoggerModule.forRoot(AppConfig.getLoggerConfig()), // ! forRootAsync is not working with ConfigService in nestjs-pino
   ],
-  controllers: [AppController], // Define the application's controller
+  controllers: [AppController],
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
@@ -44,9 +35,6 @@ import { PaginationModule } from '@core/common/pagination/pagination.module';
     { provide: APP_FILTER, useClass: ForbiddenExceptionFilter },
     { provide: APP_FILTER, useClass: NotFoundExceptionFilter },
     {
-      // Allowing to do validation through DTO
-      // Since class-validator library default throw BadRequestException, here we use exceptionFactory to throw
-      // their internal exception so that filter can recognize it
       provide: APP_PIPE,
       useFactory: () =>
         new ValidationPipe({
@@ -55,6 +43,6 @@ import { PaginationModule } from '@core/common/pagination/pagination.module';
           },
         }),
     },
-  ], // Define the application's service
+  ],
 })
 export class AppModule {}

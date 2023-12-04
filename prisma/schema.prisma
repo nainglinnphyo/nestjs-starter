@@ -1,0 +1,652 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// * ---------------------------------------------- Authentication models -------------------------------------------------
+model user {
+  id            String     @id @default(uuid()) @db.VarChar(255)
+  phone         String     @unique @db.VarChar(255)
+  password      String?
+  otp           String     @db.VarChar(6)
+  otpUsed       otpStatus  @default(UNUSED)
+  refresh_token String?
+  lastOnline    DateTime?
+  fcm_token     String?
+  dataStatus    dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  profile               profile?
+  branch                branch[]
+  brand                 brand[]
+  category              category[]
+  product               product[]
+  price                 price[]
+  priceRecord           priceRecord[]
+  stockAdjustmentRecord stockAdjustmentRecord[]
+  stockTransferRecord   stockTransferRecord[]
+  productDiscount       productDiscount[]
+  voucherDiscount       voucherDiscount[]
+  created_voucher       voucher[]               @relation("voucher_createdby")
+  approved_voucher      voucher[]               @relation("voucher_approvedby")
+  approved_payment      voucherPaymentRecord[]  @relation("payment_approvedby")
+  endUser               endUser[]
+  report                report[]
+  recreatedVoucher      recreatedVoucher[]
+  compositeRecord       compositeRecord[]
+
+  @@map("users")
+}
+
+model profile {
+  id            String      @id @default(uuid()) @db.VarChar(255)
+  username      String      @db.VarChar(255)
+  user_id       String      @unique
+  user          user        @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  file_id       String?
+  file          file?       @relation(fields: [file_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  role          String?
+  branch_id     String?
+  branch        branch?     @relation(fields: [branch_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permission_id String?
+  permission    permission? @relation(fields: [permission_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus    dataStatus  @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+model permission {
+  id                String     @id @default(uuid()) @db.VarChar(255)
+  permission_name   String
+  permission_access String     @db.Text
+  dataStatus        dataStatus @default(ACTIVE)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  profile    profile[]
+
+  @@map("permission")
+}
+
+// * ---------------------------------------------- Apartment model -------------------------------------------------
+model branch {
+  id           String     @id @default(uuid()) @db.VarChar(255)
+  name         String
+  phone        String?    @default("")
+  address      String?    @default("")
+  createdby_id String?
+  createdby    user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus   dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  type                    branchType              @default(SHOP)
+  product_on_branch       productOnBranch[]
+  transferred_records     stockTransferRecord[]   @relation("transferredFrom")
+  issued_records          stockTransferRecord[]   @relation("issuedTo")
+  stock_adjustment_record stockAdjustmentRecord[]
+  profile                 profile[]
+  voucher                 voucher[]
+  compositeRecord         compositeRecord[]
+
+  @@map("branches")
+}
+
+// * ------------------------------------------ Product models ----------------------------------------------------------
+model brand {
+  id           String     @id @default(uuid()) @db.VarChar(255)
+  name         String
+  file_id      String     @unique
+  file         file?      @relation(fields: [file_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdby_id String?
+  createdby    user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus   dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product product[]
+
+  @@map("brands")
+}
+
+model category {
+  id           String     @id @default(uuid()) @db.VarChar(255)
+  name         String
+  serial       String     @default("0")
+  createdby_id String?
+  createdby    user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus   dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product product[]
+
+  @@map("categories")
+}
+
+model product {
+  id                String            @id @default(uuid()) @db.VarChar(255)
+  name              String
+  code              String            @unique
+  status            productStatus     @default(NORMAL)
+  priceChangeStatus priceChangeStatus @default(NOT_CHANGED)
+  unit              String
+  price_id          String?
+  price             price?            @relation(fields: [price_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  brand_id          String?
+  brand             brand?            @relation(fields: [brand_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id       String?
+  category          category?         @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  file_id           String?           @unique
+  file              file?             @relation(fields: [file_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdby_id      String?
+  createdby         user?             @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus        dataStatus        @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  price_record                 priceRecord[]
+  product_on_branch            productOnBranch[]
+  stock_transfer_detail_record stockTransferDetailRecord[]
+  stock_adjustment_record      stockAdjustmentRecord[]
+  productDiscount              productDiscount[]
+  voucherDetail                voucherDetail[]
+  reportProductList            reportProductList[]
+  purchaseRecord               purchaseRecord[]
+  parent_composite             composite[]                 @relation("parent_composite")
+  child_composite              composite[]                 @relation("child_composite")
+  variablePrice                variablePrice[]
+
+  @@map("products")
+}
+
+model composite {
+  id                String     @id @default(uuid()) @db.VarChar(255)
+  parent_product_id String
+  parentProduct     product    @relation("parent_composite", fields: [parent_product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  child_product_id  String
+  childProduct      product    @relation("child_composite", fields: [child_product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ratio             Int        @default(0)
+  dataStatus        dataStatus @default(ACTIVE)
+
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  compositeRecord compositeRecord[]
+
+  @@map("composite")
+}
+
+model compositeRecord {
+  id           String              @id @default(uuid()) @db.VarChar(255)
+  branch_id    String
+  branch       branch              @relation(fields: [branch_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  composite_id String
+  composite    composite           @relation(fields: [composite_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  issuedby_id  String
+  issuedby     user                @relation(fields: [issuedby_id], references: [id])
+  amount       Int                 @default(0)
+  type         compositeRecordType @default(EXTRACT)
+  dataStatus   dataStatus          @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("composite_record")
+}
+
+model price {
+  id                String     @id @default(uuid()) @db.VarChar(255)
+  purchase_price    Float      @default(0.0)
+  retail_price      Float      @default(0.0)
+  consignment_price Float      @default(0.0)
+  createdby_id      String?
+  createdby         user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus        dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product product[]
+
+  @@map("prices")
+}
+
+model variablePrice {
+  id         String     @id @default(uuid()) @db.VarChar(255)
+  product_id String
+  product    product    @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name       String
+  amount     Float      @default(0.0)
+  minimumQty Int        @default(0)
+  dataStatus dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("variable_prices")
+}
+
+model priceChangeRecord {
+  id                    String                @id @default(uuid()) @db.VarChar(255)
+  name                  String
+  amount                Float                 @default(0.0)
+  minimumQty            Int                   @default(0)
+  price_record_id       String
+  priceRecord           priceRecord           @relation(fields: [price_record_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus            dataStatus            @default(ACTIVE)
+  priceChangeRecordType priceChangeRecordType @default(UPDATED)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("price_change_record")
+}
+
+model priceRecord {
+  id                String                  @id @default(uuid()) @db.VarChar(255)
+  purchase_price    Float                   @default(0.0)
+  retail_price      Float                   @default(0.0)
+  consignment_price Float                   @default(0.0)
+  instock           Int                     @db.Int
+  due               DateTime
+  isUpdated         priceRecordUpdateStatus @default(PENDING)
+
+  product_id   String
+  product      product    @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdby_id String?
+  createdby    user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus   dataStatus @default(ACTIVE)
+
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  purchaseRecord    purchaseRecord[]
+  priceChangeRecord priceChangeRecord[]
+
+  @@map("price_records")
+}
+
+// * ------------------------------------------ File model --------------------------------------------------------------
+model file {
+  id         String     @id @default(uuid()) @db.VarChar(255)
+  name       String
+  path       String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  dataStatus dataStatus @default(ACTIVE)
+
+  profile profile[]
+  brand   brand?
+  product product?
+
+  @@map("files")
+}
+
+// * ------------------------------------------ Stock Management models --------------------------------------------------
+model productOnBranch {
+  id                 String     @id @default(uuid()) @db.VarChar(255)
+  product_id         String
+  product            product    @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  branch_id          String
+  branch             branch     @relation(fields: [branch_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  instock            Int        @default(0) @db.Int
+  low_stock_reminder Int        @default(0) @db.Int
+  dataStatus         dataStatus @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("product_on_branch")
+}
+
+model stockAdjustmentRecord {
+  id          String                    @id @default(uuid()) @db.VarChar(255)
+  product_id  String
+  product     product                   @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  branch_id   String
+  branch      branch                    @relation(fields: [branch_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount      Int                       @default(0) @db.Int
+  action      stockAdjustmentActionType @default(ADD)
+  issuedby_id String
+  issuedby    user                      @relation(fields: [issuedby_id], references: [id])
+  dataStatus  dataStatus                @default(ACTIVE)
+
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  purchaseRecord purchaseRecord[]
+
+  @@map("stock_adjustment_records")
+}
+
+model purchaseRecord {
+  id                         String                @id @default(uuid()) @db.VarChar(255)
+  product_id                 String
+  product                    product               @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount                     Int                   @default(0) @db.Int
+  price_record_id            String
+  priceRecord                priceRecord           @relation(fields: [price_record_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  stock_adjustment_record_id String
+  stockAdjustmentRecord      stockAdjustmentRecord @relation(fields: [stock_adjustment_record_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus                 dataStatus            @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("purchase_records")
+}
+
+model stockTransferRecord {
+  id                  String     @id @default(uuid()) @db.VarChar(255)
+  voucher_id          String
+  transferredby_id    String
+  transferredby       user       @relation(fields: [transferredby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  issuedby            String
+  transferred_from_id String
+  transferred_from    branch     @relation("transferredFrom", fields: [transferred_from_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  issued_to_id        String
+  issued_to           branch     @relation("issuedTo", fields: [issued_to_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  remark              String?
+  dataStatus          dataStatus @default(ACTIVE)
+
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime                    @updatedAt
+  stockTransferDetailRecord stockTransferDetailRecord[]
+
+  @@map("stock_transfer_records")
+}
+
+model stockTransferDetailRecord {
+  id                       String              @id @default(uuid()) @db.VarChar(255)
+  product_id               String
+  product                  product             @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  stock_transfer_record_id String
+  stockTransferRecord      stockTransferRecord @relation(fields: [stock_transfer_record_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount                   Int                 @db.Int
+  dataStatus               dataStatus          @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("stock_transfer_detail_records")
+}
+
+// * ------------------------------------------------ Discount models -----------------------------------------------------
+model productDiscount {
+  id                String                @id @default(uuid()) @db.VarChar(255)
+  amount            Float                 @default(0.0)
+  minimum_qty       Int                   @default(0)
+  product_id        String
+  product           product               @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  discountPriceType discountPriceType     @default(AMOUNT)
+  createdby_id      String?
+  createdby         user?                 @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status            productDiscountStatus @default(ACTIVE)
+  dataStatus        dataStatus            @default(ACTIVE)
+
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  voucherDetail voucherDetail[]
+
+  @@map("product_discount")
+}
+
+model voucherDiscount {
+  id                           String                       @id @default(uuid()) @db.VarChar(255)
+  code                         String                       @unique
+  amount                       Float                        @default(0.0)
+  lifespan                     DateTime?
+  count                        Int?
+  discountPriceType            discountPriceType            @default(AMOUNT)
+  voucherDiscountAvailableType voucherDiscountAvailableType @default(ACTIVE)
+  dataStatus                   dataStatus                   @default(ACTIVE)
+
+  createdby_id String?
+  createdby    user?   @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  voucher    voucher[]
+
+  @@map("voucher_discount")
+}
+
+// * ------------------------------------------------ End User model -----------------------------------------------------
+model endUser {
+  id                   String     @id @default(uuid()) @db.VarChar(255)
+  phone                String     @unique
+  company              String
+  contact_person_phone String?
+  address              String?
+  password             String?
+  otp                  String     @db.VarChar(6)
+  otpUsed              otpStatus  @default(UNUSED)
+  refresh_token        String?
+  fcm_token            String?
+  createdby_id         String?
+  createdby            user?      @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus           dataStatus @default(ACTIVE)
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  voucher    voucher[]
+
+  @@map("end_user")
+}
+
+// * ------------------------------------------------ Voucher models -----------------------------------------------------
+model voucher {
+  id                            String             @id @default(uuid()) @db.VarChar(255)
+  voucher_no                    String             @unique
+  branch_id                     String
+  branch                        branch             @relation(fields: [branch_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  orderedby_id                  String
+  orderedby                     endUser            @relation(fields: [orderedby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  voucher_discount_id           String?
+  voucherDiscount               voucherDiscount?   @relation(fields: [voucher_discount_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  sub_total                     Float              @default(0.0)
+  total_product_discount_amount Float              @default(0.0)
+  total_discount_amount         Float              @default(0.0)
+  grand_total                   Float              @default(0.0)
+  remark                        String?
+  voucherTargetPrice            voucherTargetPrice @default(RETAIL)
+  voucherType                   voucherType        @default(UNDEFINED)
+  voucherStatus                 voucherStatus      @default(PENDING)
+  discount                      Int                @default(0)
+  due                           DateTime?
+  createdby_id                  String
+  createdby                     user               @relation("voucher_createdby", fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  approvedby_id                 String?
+  approvedby                    user?              @relation("voucher_approvedby", fields: [approvedby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  dataStatus                    dataStatus         @default(ACTIVE)
+
+  created_at           DateTime               @default(now())
+  updated_at           DateTime               @updatedAt
+  voucherPaymentRecord voucherPaymentRecord[]
+  voucherDetail        voucherDetail[]
+  recreatedVoucher     recreatedVoucher[]
+
+  @@map("voucher")
+}
+
+model voucherDetail {
+  id                  String              @id @default(uuid()) @db.VarChar(255)
+  voucher_id          String?
+  voucher             voucher?            @relation(fields: [voucher_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product_id          String
+  product             product             @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  isProductInDiscount isProductInDiscount @default(NOT_DISCOUNTED)
+  product_discount_id String?
+  productDiscount     productDiscount?    @relation(fields: [product_discount_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  qty                 Int                 @default(0)
+  sub_total           Float               @default(0.0)
+  grand_total         Float               @default(0.0)
+  originalPrice       Float               @default(0.0)
+  dataStatus          dataStatus          @default(ACTIVE)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("voucher_detail")
+}
+
+model voucherPaymentRecord {
+  id                 String             @id @default(uuid()) @db.VarChar(255)
+  grand_total        Float              @default(0.0)
+  paid_amount        Float              @default(0.0)
+  discount           Int                @default(0)
+  voucher_id         String?
+  voucher            voucher?           @relation(fields: [voucher_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  voucherPaymentType voucherPaymentType @default(CASH_DOWN)
+  approvedby_id      String
+  approvedby         user               @relation("payment_approvedby", fields: [approvedby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at         DateTime           @default(now())
+  updated_at         DateTime           @updatedAt
+  dataStatus         dataStatus         @default(ACTIVE)
+
+  @@map("voucher_payment_record")
+}
+
+model recreatedVoucher {
+  id             String     @id @default(uuid()) @db.VarChar(255)
+  voucher_id     String
+  voucher        voucher    @relation(fields: [voucher_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recreatedby_id String
+  recreatedBy    user       @relation(fields: [recreatedby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at     DateTime   @default(now())
+  updated_at     DateTime   @updatedAt
+  dataStatus     dataStatus @default(ACTIVE)
+
+  @@map("recreated_voucher")
+}
+
+// * ------------------------------------------------ Report model --------------------------------------------------------
+
+model report {
+  id                String              @id @default(uuid()) @db.VarChar(255)
+  description       String              @db.LongText
+  createdby_id      String
+  createdBy         user                @relation(fields: [createdby_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  reportProductList reportProductList[]
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  dataStatus        dataStatus          @default(ACTIVE)
+
+  @@map("report")
+}
+
+model reportProductList {
+  id         String     @id @default(uuid()) @db.VarChar(255)
+  reportId   String
+  report     report     @relation(fields: [reportId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  product_id String
+  product    product    @relation(fields: [product_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  dataStatus dataStatus @default(ACTIVE)
+
+  @@map("report_product")
+}
+
+// * --------------------------------------------------- ENUM -------------------------------------------------------------
+enum productStatus {
+  NORMAL
+  NEW
+  HOT
+  DISCOUNTED
+}
+
+enum productDiscountStatus {
+  ACTIVE
+  DELETED
+}
+
+enum branchType {
+  WAREHOUSE
+  SHOP
+}
+
+enum stockAdjustmentActionType {
+  ADD
+  SUB
+}
+
+enum otpStatus {
+  USED
+  UNUSED
+}
+
+enum priceRecordUpdateStatus {
+  PENDING
+  UPDATED
+}
+
+enum discountPriceType {
+  PERCENTAGE
+  AMOUNT
+}
+
+enum voucherDiscountAvailableType {
+  ACTIVE
+  DELETED
+}
+
+enum priceChangeStatus {
+  NOT_CHANGED
+  CHANGED
+}
+
+enum voucherType {
+  UNDEFINED
+  CASH_DOWN
+  CONSIGNMENT
+}
+
+enum voucherPaymentType {
+  CASH_DOWN
+  CONSIGNMENT
+}
+
+enum voucherStatus {
+  PENDING
+  COMPLETE
+  IN_DUE
+  OVER_DUE
+  CANCELLED
+}
+
+enum isProductInDiscount {
+  DISCOUNTED
+  NOT_DISCOUNTED
+}
+
+enum voucherTargetPrice {
+  RETAIL
+  CONSIGNMENT
+}
+
+enum dataStatus {
+  ACTIVE
+  DELETED
+}
+
+enum priceChangeRecordType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+enum compositeRecordType {
+  EXTRACT
+  REFILL
+}

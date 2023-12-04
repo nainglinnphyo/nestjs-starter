@@ -1,6 +1,7 @@
 import { IAppConfig, appConfig } from './app.config';
 import { ITransmitterConfig, transmitterConfig } from './transmitter.config';
 import { NodeEnv } from '../shared/enums/node-env.enum';
+import AuthConfig from './auth.config';
 
 export interface IConfig {
   env: string;
@@ -22,3 +23,5 @@ export const configuration = (): Partial<IConfig> => ({
   app: appConfig(),
   transmitter: transmitterConfig(),
 });
+
+export default [AuthConfig];

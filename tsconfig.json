@@ -19,7 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@app/*": ["src/app/*"],
-      "@config/*": ["src/app/config/*"],
+      "@config/*": ["src/config/*"],
       "@core/*": ["src/core/*"],
       "@common/*": ["src/core/common/*"],
       "@pagination/*": ["src/core/common/pagination/*"],

@@ -1,14 +1,17 @@
+/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
+/* eslint-disable import/order */
 // Import external modules
 import * as cluster from 'cluster';
 import * as os from 'os';
 import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Logger as Pino } from 'nestjs-pino';
 
 // Import internal modules
 import { AppModule } from './app.module';
+import { swaggerOptions } from '@config/swagger.config';
 
 // Create a logger for the bootstrap process
 const logger = new Logger('bootstrap');
@@ -27,13 +30,8 @@ async function bootstrap() {
   app.enableCors();
 
   // Define the Swagger options and document
-  const options = new DocumentBuilder()
-    .setTitle('NestJS Starter API')
-    .setDescription('The API for the NestJS Starter project')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
+
+  const document = SwaggerModule.createDocument(app, swaggerOptions);
 
   // Set up the Swagger UI endpoint
   SwaggerModule.setup('docs', app, document, {
