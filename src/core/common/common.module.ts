@@ -2,10 +2,9 @@
 /* eslint-disable import/order */
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { PaginationModule } from './pagination/pagination.module';
 import * as Joi from 'joi';
 import configs from '@config/index';
-import { PrismaModule } from 'src/shared/prisma/prisma.module';
+import { PrismaModule } from '@shared/prisma/prisma.module';
 
 @Module({
   controllers: [],
@@ -36,7 +35,6 @@ import { PrismaModule } from 'src/shared/prisma/prisma.module';
         abortEarly: true,
       },
     }),
-    PaginationModule,
   ],
 })
 export class CommonModule {}

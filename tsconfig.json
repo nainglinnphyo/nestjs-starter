@@ -23,7 +23,7 @@
       "@core/*": ["src/core/*"],
       "@common/*": ["src/core/common/*"],
       "@pagination/*": ["src/core/common/pagination/*"],
-      "@shared/*": ["src/app/shared/*"],
+      "@shared/*": ["src/shared/*"],
   },
   },
 }

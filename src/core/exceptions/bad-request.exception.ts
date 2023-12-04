@@ -81,6 +81,7 @@ export class BadRequestException extends HttpException {
    */
   generateHttpResponseBody = (message?: string): IHttpBadRequestExceptionResponse => {
     return {
+      success: false,
       code: this.code,
       message: message || this.message,
       description: this.description,

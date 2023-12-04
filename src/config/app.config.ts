@@ -9,15 +9,6 @@ export interface IAppConfig {
   name: string;
   panelUrl: string;
 }
-
-export const appConfig = (): IAppConfig => ({
-  logo: process.env.APP_LOGO,
-  name: process.env.APP_NAME,
-  panelUrl: process.env.APP_PANEL_URL,
-});
-
-// Import external modules
-
 export class AppConfig {
   public static getLoggerConfig(): Params {
     // Define the configuration for the Pino logger

@@ -90,6 +90,7 @@ export class ForbiddenException extends HttpException {
    */
   generateHttpResponseBody = (message?: string): IHttpForbiddenExceptionResponse => {
     return {
+      success: false,
       code: this.code,
       message: message || this.message,
       description: this.description,

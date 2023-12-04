@@ -36,7 +36,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
 
     // Create a new BadRequestException with the validation error message.
     const err = BadRequestException.VALIDATION_ERROR(Object.values(errorMsg)[0]);
-
     const responseBody = {
       error: err.code,
       message: err.message,

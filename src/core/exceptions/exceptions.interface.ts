@@ -6,6 +6,7 @@ export interface IException {
 }
 
 export interface IHttpBadRequestExceptionResponse {
+  success: boolean;
   code: number;
   message: string;
   description: string;
@@ -14,6 +15,7 @@ export interface IHttpBadRequestExceptionResponse {
 }
 
 export interface IHttpInternalServerErrorExceptionResponse {
+  success: boolean;
   code: number;
   message: string;
   description: string;
@@ -22,6 +24,7 @@ export interface IHttpInternalServerErrorExceptionResponse {
 }
 
 export interface IHttpUnauthorizedExceptionResponse {
+  success: boolean;
   code: number;
   message: string;
   description: string;
@@ -30,6 +33,7 @@ export interface IHttpUnauthorizedExceptionResponse {
 }
 
 export interface IHttpForbiddenExceptionResponse {
+  success: boolean;
   code: number;
   message: string;
   description: string;

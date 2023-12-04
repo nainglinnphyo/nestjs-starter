@@ -78,6 +78,7 @@ export class InternalServerErrorException extends HttpException {
    */
   generateHttpResponseBody = (message?: string): IHttpInternalServerErrorExceptionResponse => {
     return {
+      success: false,
       code: this.code,
       message: message || this.message,
       description: this.description,
