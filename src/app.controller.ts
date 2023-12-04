@@ -1,10 +1,12 @@
+/* eslint-disable import/order */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Test } from '@core/interfaces/app.dto';
-import { ApiResponseBody } from '@config/@types/app.types';
+import { IResponsePaging } from '@core/interfaces/response.interface';
 import { AppService } from './app.service';
+import { User } from '@core/decorators/auth.decorators';
 
 @ApiTags('Health-check')
 @Controller()
@@ -18,7 +20,7 @@ export class AppController {
   })
   @ApiResponse({ status: 200, description: 'The record has been successfully created.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  getHello(@Body() body: Test): ApiResponseBody<number> {
+  getHello(@Body() body: Test, @User() user): IResponsePaging {
     // console.log(body);
     // throw new BadRequestException({
     //   message: 'error',
@@ -29,6 +31,21 @@ export class AppController {
     //   },
     //   description: 'des',
     // });
-    return { message: 'Custom message', result: body.id };
+    console.log(user);
+    return {
+      _metadata: {
+        message: 'success',
+        statusCode: HttpStatus.OK,
+      },
+      data: [
+        {
+          userId: '24444',
+        },
+      ],
+      _pagination: {
+        total: 1000,
+        totalPage: 10,
+      },
+    };
   }
 }
