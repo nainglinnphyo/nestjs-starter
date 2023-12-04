@@ -2,6 +2,7 @@ import * as crypto from 'crypto'; // Used to generate random UUIDs
 import { IncomingMessage, ServerResponse } from 'http'; // Used to handle incoming and outgoing HTTP messages
 import { LogLevel, NodeEnv } from 'src/shared/enums'; // Used to define parameters for the Pino logger
 import { Params } from 'nestjs-pino';
+import { registerAs } from '@nestjs/config';
 
 export interface IAppConfig {
   logo: string;
@@ -61,3 +62,11 @@ export class AppConfig {
     };
   }
 }
+
+export default registerAs(
+  'app',
+  (): Record<string, any> => ({
+    port: process.env.PORT || 3000,
+    globalPrefix: '/api',
+  }),
+);

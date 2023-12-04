@@ -45,7 +45,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Get the port number from the configuration
-  const PORT = configService.get<number>('port');
+  const PORT = configService.get<number>('app.port');
 
   // Start the application
   await app.listen(PORT);
