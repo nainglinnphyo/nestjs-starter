@@ -6,37 +6,41 @@ export interface IException {
 }
 
 export interface IHttpBadRequestExceptionResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
+  _meta: {
+    code: number;
+    message: string;
+    description: string;
+    timestamp: string;
+    traceId: string;
+  };
 }
 
 export interface IHttpInternalServerErrorExceptionResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
+  _meta: {
+    code: number;
+    message: string;
+    description: string;
+    timestamp: string;
+    traceId: string;
+  };
 }
 
 export interface IHttpUnauthorizedExceptionResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
+  _meta: {
+    code: number;
+    message: string;
+    description: string;
+    timestamp: string;
+    traceId: string;
+  };
 }
 
 export interface IHttpForbiddenExceptionResponse {
-  success: boolean;
-  code: number;
-  message: string;
-  description: string;
-  timestamp: string;
-  traceId: string;
+  _meta: {
+    code: number;
+    message: string;
+    description: string;
+    timestamp: string;
+    traceId: string;
+  };
 }

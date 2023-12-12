@@ -78,12 +78,13 @@ export class InternalServerErrorException extends HttpException {
    */
   generateHttpResponseBody = (message?: string): IHttpInternalServerErrorExceptionResponse => {
     return {
-      success: false,
-      code: this.code,
-      message: message || this.message,
-      description: this.description,
-      timestamp: this.timestamp,
-      traceId: this.traceId,
+      _meta: {
+        code: this.code,
+        message: message || this.message,
+        description: this.description,
+        timestamp: this.timestamp,
+        traceId: this.traceId,
+      },
     };
   };
 
