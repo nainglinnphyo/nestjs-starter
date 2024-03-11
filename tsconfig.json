@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2019",
+    "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -16,14 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@app/*": ["src/app/*"],
-      "@config/*": ["src/config/*"],
-      "@core/*": ["src/core/*"],
-      "@common/*": ["src/core/common/*"],
-      "@pagination/*": ["src/core/common/pagination/*"],
-      "@shared/*": ["src/shared/*"],
-  },
-  },
+    "noFallthroughCasesInSwitch": false
+  }
 }
