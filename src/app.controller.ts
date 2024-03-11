@@ -8,44 +8,7 @@ import { IResponsePaging } from '@core/interfaces/response.interface';
 import { AppService } from './app.service';
 import { User } from '@core/decorators/auth.decorators';
 
-@ApiTags('Health-check')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-
-  @HttpCode(HttpStatus.OK)
-  @Post()
-  @ApiBody({
-    type: Test,
-  })
-  @ApiResponse({ status: 200, description: 'The record has been successfully created.' })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  getHello(@Body() body: Test, @User() user): IResponsePaging {
-    // console.log(body);
-    // throw new BadRequestException({
-    //   message: 'error',
-    //   code: 10000,
-    //   cause: {
-    //     message: 'cause',
-    //     name: 'cuase name',
-    //   },
-    //   description: 'des',
-    // });
-    console.log(user);
-    return {
-      _metadata: {
-        message: 'success',
-        statusCode: HttpStatus.OK,
-      },
-      data: [
-        {
-          userId: '24444',
-        },
-      ],
-      _pagination: {
-        total: 1000,
-        totalPage: 10,
-      },
-    };
-  }
 }
