@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from './constants';

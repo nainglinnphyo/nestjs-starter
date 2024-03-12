@@ -10,7 +10,7 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: BadRequestException, host: ArgumentsHost): void {
-    this.logger.verbose(exception);
+    this.logger.debug('exception');
 
     const { httpAdapter } = this.httpAdapterHost;
 
