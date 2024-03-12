@@ -19,31 +19,30 @@ This is a starter kit for building scalable and maintainable server-side applica
 ## Getting Started
 
 1. Clone the repository:
-
-```bash
+```
 git clone https://github.com/your-username/nestjs-starter-kit.git
 cd nestjs-starter-kit
-
-```bash
-git clone https://github.com/your-username/nestjs-starter-kit.git
-cd nestjs-starter-kit
+```
 
 2. Install Dependencies
 
-```bash
+```
 npm install
 # or
 yarn install
+```
 
 3. Copy the example configuration file:
 
-```bash
+```
 cp .env.example .env
+```
 
 4. Start the app
 
-```bash
+```
 npm run start:dev
 # or
 yarn start:dev
+```
 
