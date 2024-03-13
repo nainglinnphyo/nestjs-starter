@@ -25,11 +25,17 @@ export const winstonLoggerOptions = {
     }),
     new transports.Console({
       format: format.combine(
-        format.cli(),
         format.splat(),
-        format.timestamp(),
+        format.ms(),
+        format.timestamp({ format: 'YYYY/MM/DD HH:mm:ss' }),
+        format.colorize({
+          colors: { info: 'green', error: 'red', warn: 'yellow' },
+          all: true,
+          level: true,
+          message: true,
+        }),
         format.printf((info) => {
-          return `${new Date(info.timestamp).toLocaleString()} ${info.level}: ${info.message}`;
+          return `${info.timestamp} ${info.level}: [${info.context}] ${info.message} ${info.ms}`;
         }),
       ),
     }),
