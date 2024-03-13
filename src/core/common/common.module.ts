@@ -6,6 +6,7 @@ import * as Joi from 'joi';
 import configs from '@config/index';
 import { PrismaModule } from '@shared/prisma/prisma.module';
 
+const ENV = process.env.NODE_ENV || 'development';
 @Module({
   controllers: [],
   providers: [],
@@ -15,15 +16,13 @@ import { PrismaModule } from '@shared/prisma/prisma.module';
       load: configs,
       isGlobal: true,
       cache: true,
-      envFilePath: ['.env'],
+      envFilePath: [`.env.${ENV}`],
       expandVariables: true,
       validationSchema: Joi.object({
         // app config
         PORT: Joi.number().default('3000').required(),
-        NODE_ENV: Joi.string().default('development').required(),
-        DATABASE_URL:Joi.string().required(),
-
-        //auth config
+        DATABASE_URL: Joi.string().required(),
+        // auth config
         AUTH_JWT_ACCESS_TOKEN_EXPIRED: Joi.string().default('15m').required(),
         AUTH_JWT_ACCESS_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),
         AUTH_JWT_REFRESH_TOKEN_EXPIRED: Joi.string().default('182d').required(),

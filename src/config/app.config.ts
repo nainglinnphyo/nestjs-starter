@@ -1,5 +1,3 @@
-import * as crypto from 'crypto'; // Used to generate random UUIDs
-import { IncomingMessage, ServerResponse } from 'http'; // Used to handle incoming and outgoing HTTP messages
 import { NodeEnv } from 'src/shared/enums';
 import { registerAs } from '@nestjs/config';
 
