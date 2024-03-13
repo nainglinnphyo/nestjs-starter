@@ -20,7 +20,7 @@ This is a starter kit for building scalable and maintainable server-side applica
 
 1. Clone the repository:
 ```
-git clone https://github.com/nainglinnphyo/nestjs-starter-kit.git
+git clone https://github.com/nainglinnphyo/nestjs-starter.git
 cd nestjs-starter-kit
 ```
 
