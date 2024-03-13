@@ -10,9 +10,9 @@ export function createDocument(app: INestApplication) {
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'authorization')
     .setDescription(SWAGGER_CONFIG.description)
     .setVersion(SWAGGER_CONFIG.version);
-  for (const tag of SWAGGER_CONFIG.tags) {
+  SWAGGER_CONFIG.tags.forEach((tag) => {
     builder.addTag(tag);
-  }
+  });
   const configService = app.get(ConfigService);
   const options = builder.build();
   const username = configService.get<string>('swagger.username');
