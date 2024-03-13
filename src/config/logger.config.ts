@@ -29,7 +29,7 @@ export const winstonLoggerOptions = {
         format.splat(),
         format.timestamp(),
         format.printf((info) => {
-          return `${info.timestamp} ${info.level}: ${info.message}`;
+          return `${new Date(info.timestamp).toLocaleString()} ${info.level}: ${info.message}`;
         }),
       ),
     }),
