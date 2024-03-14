@@ -1,16 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
-/* eslint-disable import/order */
 // Import external modules
-import * as cluster from 'cluster';
-import * as os from 'os';
-import { ConfigService } from '@nestjs/config';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { createDocument } from '@core/docs/swagger';
-import { WinstonModule } from 'nest-winston';
 import { winstonLoggerOptions } from '@config/logger.config';
+import { createDocument } from '@core/docs/swagger';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import * as cluster from 'cluster';
+import { WinstonModule } from 'nest-winston';
+import * as os from 'os';
+import { AppModule } from './app.module';
 
 const logger = new Logger('bootstrap');
 async function bootstrap() {
@@ -23,6 +22,9 @@ async function bootstrap() {
   createDocument(app);
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('app.port');
+  if (!PORT) {
+    throw new Error('PORT is required to start server!');
+  }
   await app.listen(PORT);
   logger.log(`Application listening on port ${PORT}`);
 }

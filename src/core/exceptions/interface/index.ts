@@ -9,7 +9,7 @@ export interface IHttpBadRequestExceptionResponse {
   _metadata: {
     code: number;
     message: string;
-    description: string;
+    description?: string;
     timestamp: string;
     traceId: string;
     path: string;
@@ -53,7 +53,7 @@ export interface IHttpNotFoundExceptionResponse {
   _metadata: {
     code: number;
     message: string;
-    description: string;
+    description?: string;
     timestamp: string;
     traceId: string;
     path: string;
