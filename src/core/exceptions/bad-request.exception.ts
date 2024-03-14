@@ -25,7 +25,7 @@ export class BadRequestException extends HttpException {
     description: 'A description of the error message.',
     example: 'The input provided was invalid',
   })
-  description: string; // Description of the exception
+  description?: string; // Description of the exception
 
   @ApiProperty({
     description: 'Timestamp of the exception',
@@ -53,9 +53,9 @@ export class BadRequestException extends HttpException {
     });
 
     this.message = exception.message;
-    this.cause = exception.cause;
+    this.cause = exception.cause ?? new Error();
     this.description = exception.description;
-    this.code = exception.code;
+    this.code = exception.code ?? HttpStatus.BAD_REQUEST;
     this.timestamp = new Date().toISOString();
   }
 

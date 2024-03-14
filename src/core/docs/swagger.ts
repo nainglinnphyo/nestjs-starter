@@ -1,8 +1,8 @@
 import { SWAGGER_CONFIG } from '@config/swagger.config';
 import { INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
-import { ConfigService } from '@nestjs/config';
 
 export function createDocument(app: INestApplication) {
   const builder = new DocumentBuilder()
@@ -15,8 +15,8 @@ export function createDocument(app: INestApplication) {
   });
   const configService = app.get(ConfigService);
   const options = builder.build();
-  const username = configService.get<string>('swagger.username');
-  const password = configService.get<string>('swagger.password');
+  const username = configService.get<string>('swagger.username') ?? 'username';
+  const password = configService.get<string>('swagger.password') ?? 'password';
   const appMode = configService.get<string>('app.mode');
   if (appMode !== 'development') {
     app.use(
