@@ -3,6 +3,7 @@
   "version": "0.0.3",
   "description": "",
   "main": "dist/main.js",
+  "license":"MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

@@ -7,13 +7,13 @@ export interface IResponseMetadata {
 
 export interface IResponse {
   _metadata?: IResponseMetadata;
-  data?: Record<string, any>;
+  _data?: Record<string, any>;
 }
 
 export interface IResponsePaging {
   _metadata?: IResponseMetadata;
   _pagination: IResponsePagingPagination;
-  data: Record<string, any>[];
+  _data: Record<string, any>[];
 }
 
 export interface IResponsePagingPagination {
