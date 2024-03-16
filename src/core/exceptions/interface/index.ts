@@ -31,7 +31,7 @@ export interface IHttpUnauthorizedExceptionResponse {
   _metadata: {
     code: number;
     message: string;
-    description: string;
+    description?: string;
     timestamp: string;
     traceId: string;
     path: string;
@@ -42,7 +42,7 @@ export interface IHttpForbiddenExceptionResponse {
   _metadata: {
     code: number;
     message: string;
-    description: string;
+    description?: string;
     timestamp: string;
     traceId: string;
     path: string;

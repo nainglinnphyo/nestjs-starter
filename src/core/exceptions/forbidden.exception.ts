@@ -2,13 +2,13 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from './constants';
-import { IException, IHttpBadRequestExceptionResponse } from './interface';
+import { IException, IHttpForbiddenExceptionResponse } from './interface';
 
-export class BadRequestException extends HttpException {
+export class ForbiddenException extends HttpException {
   @ApiProperty({
-    enum: ExceptionConstants.BadRequestCodes,
+    enum: ExceptionConstants.ForbiddenCodes,
     description: 'A unique code identifying the error.',
-    example: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
+    example: ExceptionConstants.ForbiddenCodes.FORBIDDEN,
   })
   code: number; // Internal status code
 
@@ -44,18 +44,17 @@ export class BadRequestException extends HttpException {
     description: 'Request path',
     example: '/',
   })
-  path: string; // requested path
+  path: string; // Trace ID of the request
 
   constructor(exception: IException) {
-    super(exception.message, HttpStatus.BAD_REQUEST, {
+    super(exception.message, HttpStatus.FORBIDDEN, {
       cause: exception.cause,
       description: exception.description,
     });
-
     this.message = exception.message;
     this.cause = exception.cause ?? new Error();
     this.description = exception.description;
-    this.code = exception.code ?? HttpStatus.BAD_REQUEST;
+    this.code = exception.code ?? HttpStatus.FORBIDDEN;
     this.timestamp = new Date().toISOString();
   }
 
@@ -67,7 +66,7 @@ export class BadRequestException extends HttpException {
     this.path = path;
   };
 
-  generateHttpResponseBody = (message?: string): IHttpBadRequestExceptionResponse => {
+  generateHttpResponseBody = (message?: string): IHttpForbiddenExceptionResponse => {
     return {
       _metadata: {
         message: message || this.message,
@@ -78,47 +77,5 @@ export class BadRequestException extends HttpException {
         path: this.path,
       },
     };
-  };
-
-  static HTTP_REQUEST_TIMEOUT = () => {
-    return new BadRequestException({
-      message: 'HTTP Request Timeout',
-      code: ExceptionConstants.BadRequestCodes.HTTP_REQUEST_TIMEOUT,
-    });
-  };
-
-  static RESOURCE_ALREADY_EXISTS = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Resource Already Exists',
-      code: ExceptionConstants.BadRequestCodes.RESOURCE_ALREADY_EXISTS,
-    });
-  };
-
-  static RESOURCE_NOT_FOUND = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Resource Not Found',
-      code: ExceptionConstants.BadRequestCodes.RESOURCE_NOT_FOUND,
-    });
-  };
-
-  static VALIDATION_ERROR = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Validation Error',
-      code: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
-    });
-  };
-
-  static UNEXPECTED = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Unexpected Error',
-      code: ExceptionConstants.BadRequestCodes.UNEXPECTED_ERROR,
-    });
-  };
-
-  static INVALID_INPUT = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Invalid Input',
-      code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,
-    });
   };
 }

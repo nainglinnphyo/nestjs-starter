@@ -8,6 +8,8 @@ import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MainModule } from './modules/main.module';
+import { UnauthorizedExceptionFilter } from './core/filters/unauthorized.exception-filter';
+import { ForbiddenExceptionFilter } from './core/filters/forbidden.exception-filter';
 
 @Module({
   imports: [CommonModule, MainModule],
@@ -25,6 +27,14 @@ import { MainModule } from './modules/main.module';
     {
       provide: APP_FILTER,
       useClass: NotFoundExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: UnauthorizedExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ForbiddenExceptionFilter,
     },
     {
       provide: APP_PIPE,

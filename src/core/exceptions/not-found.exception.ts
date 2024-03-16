@@ -46,7 +46,7 @@ export class NotFoundException extends HttpException {
   path: string; // Trace ID of the request
 
   constructor(exception: IException) {
-    super(exception.message, HttpStatus.BAD_REQUEST, {
+    super(exception.message, HttpStatus.NOT_FOUND, {
       cause: exception.cause,
       description: exception.description,
     });
