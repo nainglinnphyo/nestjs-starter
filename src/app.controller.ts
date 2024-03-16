@@ -1,16 +1,11 @@
-import { AppService } from '@app/app.service';
 import { BadRequestException } from '@core/exceptions';
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from '@core/exceptions/constants';
-import { PrismaService } from '@shared/prisma/prisma.service';
 import { IResponse } from './core/interfaces/response.interface';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly dbService: PrismaService,
-  ) {}
+  // constructor() {}
 
   @Get('api')
   testException(): IResponse {

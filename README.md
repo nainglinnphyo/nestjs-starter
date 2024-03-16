@@ -8,6 +8,7 @@ This starter kit provides a foundation for building scalable and maintainable se
 - **Prisma ORM Integration**: Seamless integration with Prisma ORM for efficient database operations.
 - **Custom Exception Handling**: Implemented custom exceptions to handle errors gracefully.
 - **Exception Filters**: Added exception filters to centralize error handling and enhance application robustness.
+- **Custom Decorators**: Included custom decorator functions to extend functionality and simplify common tasks.
 
 ## Prerequisites
 
