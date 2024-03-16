@@ -1,15 +1,13 @@
 # Nest.js Starter Kit
 
-This is a starter kit for building scalable and maintainable server-side applications using Nest.js. It is designed to work seamlessly with various Object-Relational Mapping (ORM) libraries such as Prisma, TypeORM, and Mongoose.
+This starter kit provides a foundation for building scalable and maintainable server-side applications using Nest.js. It is designed to seamlessly integrate with Prisma Object-Relational Mapping (ORM) libraries for efficient data handling.
 
 ## Features
 
-- Flexible configuration for multiple ORMs.
-- Pre-configured for Prisma, TypeORM, and Mongoose.
-- Modular structure for easy scalability.
-- Built-in authentication and authorization middleware.
-- API documentation using Swagger.
-- Logging with Winston.
+- **Nest.js Framework**: Utilizes the robust Nest.js framework for building scalable applications with TypeScript.
+- **Prisma ORM Integration**: Seamless integration with Prisma ORM for efficient database operations.
+- **Custom Exception Handling**: Implemented custom exceptions to handle errors gracefully.
+- **Exception Filters**: Added exception filters to centralize error handling and enhance application robustness.
 
 ## Prerequisites
 
@@ -19,9 +17,10 @@ This is a starter kit for building scalable and maintainable server-side applica
 ## Getting Started
 
 1. Clone the repository:
+
 ```
 git clone https://github.com/nainglinnphyo/nestjs-starter.git
-cd nestjs-starter-kit
+cd nestjs-starter
 ```
 
 2. Install Dependencies
@@ -32,17 +31,27 @@ npm install
 yarn install
 ```
 
-3. Copy the example configuration file:
+3. Copy the example configuration file and edit with you credentials:
 
 ```
-cp .env.example .env
+cp .env.example .env.development
 ```
 
-4. Start the app
+4. migrate and generate type
+```
+yarn migrate:dev
+
+#in production
+
+yarn migrate:deploy
+
+#and
+
+npx prisma generate
+```
+
+5. Start the app
 
 ```
-npm run start:dev
-# or
 yarn start:dev
 ```
-
