@@ -59,3 +59,14 @@ export interface IHttpNotFoundExceptionResponse {
     path: string;
   };
 }
+
+export interface IHttpGatewayTimeOutExceptionResponse {
+  _metadata: {
+    code: number;
+    message: string;
+    description?: string;
+    timestamp: string;
+    traceId: string;
+    path: string;
+  };
+}

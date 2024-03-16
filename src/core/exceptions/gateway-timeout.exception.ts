@@ -1,9 +1,10 @@
+/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from './constants';
-import { IException, IHttpNotFoundExceptionResponse } from './interface';
+import { IException, IHttpGatewayTimeOutExceptionResponse } from './interface';
 
-export class NotFoundException extends HttpException {
+export class GatewayTimeoutException extends HttpException {
   @ApiProperty({
     enum: ExceptionConstants.BadRequestCodes,
     description: 'A unique code identifying the error.',
@@ -43,10 +44,10 @@ export class NotFoundException extends HttpException {
     description: 'Request path',
     example: '/',
   })
-  path: string; // Trace ID of the request
+  path: string; // requested path
 
   constructor(exception: IException) {
-    super(exception.message, HttpStatus.NOT_FOUND, {
+    super(exception.message, HttpStatus.BAD_REQUEST, {
       cause: exception.cause,
       description: exception.description,
     });
@@ -54,7 +55,7 @@ export class NotFoundException extends HttpException {
     this.message = exception.message;
     this.cause = exception.cause ?? new Error();
     this.description = exception.description;
-    this.code = exception.code ?? HttpStatus.NOT_FOUND;
+    this.code = exception.code ?? HttpStatus.BAD_REQUEST;
     this.timestamp = new Date().toISOString();
   }
 
@@ -66,7 +67,7 @@ export class NotFoundException extends HttpException {
     this.path = path;
   };
 
-  generateHttpResponseBody = (message?: string): IHttpNotFoundExceptionResponse => {
+  generateHttpResponseBody = (message?: string): IHttpGatewayTimeOutExceptionResponse => {
     return {
       _metadata: {
         message: message || this.message,

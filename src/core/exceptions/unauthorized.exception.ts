@@ -79,32 +79,4 @@ export class UnauthorizedException extends HttpException {
       },
     };
   };
-
-  static RESOURCE_NOT_FOUND = (msg?: string) => {
-    return new UnauthorizedException({
-      message: msg || 'Resource Not Found',
-      code: ExceptionConstants.UnauthorizedCodes.RESOURCE_NOT_FOUND,
-    });
-  };
-
-  static VALIDATION_ERROR = (msg?: string) => {
-    return new UnauthorizedException({
-      message: msg || 'Validation Error',
-      code: ExceptionConstants.UnauthorizedCodes.INVALID_CREDENTIALS,
-    });
-  };
-
-  static UNEXPECTED = (msg?: string) => {
-    return new UnauthorizedException({
-      message: msg || 'Unexpected Error',
-      code: ExceptionConstants.UnauthorizedCodes.UNEXPECTED_ERROR,
-    });
-  };
-
-  static INVALID_INPUT = (msg?: string) => {
-    return new UnauthorizedException({
-      message: msg || 'Invalid Input',
-      code: ExceptionConstants.UnauthorizedCodes.INVALID_CREDENTIALS,
-    });
-  };
 }

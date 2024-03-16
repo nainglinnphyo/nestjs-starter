@@ -1,15 +1,20 @@
 /* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CommonModule } from '@core/common/common.module';
 import { MiddlewareConsumer, Module, ValidationError, ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter, BadRequestExceptionFilter } from '@core/filters';
-import { NotFoundExceptionFilter } from '@core/filters/not-found.exception-filter';
+import {
+  AllExceptionsFilter,
+  BadRequestExceptionFilter,
+  ForbiddenExceptionFilter,
+  GatewayTimeOutExceptionFilter,
+  NotFoundExceptionFilter,
+  UnauthorizedExceptionFilter,
+} from '@core/filters';
 import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MainModule } from './modules/main.module';
-import { UnauthorizedExceptionFilter } from './core/filters/unauthorized.exception-filter';
-import { ForbiddenExceptionFilter } from './core/filters/forbidden.exception-filter';
+import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 
 @Module({
   imports: [CommonModule, MainModule],
@@ -37,6 +42,10 @@ import { ForbiddenExceptionFilter } from './core/filters/forbidden.exception-fil
       useClass: ForbiddenExceptionFilter,
     },
     {
+      provide: APP_FILTER,
+      useClass: GatewayTimeOutExceptionFilter,
+    },
+    {
       provide: APP_PIPE,
       useFactory: () =>
         new ValidationPipe({
@@ -45,6 +54,22 @@ import { ForbiddenExceptionFilter } from './core/filters/forbidden.exception-fil
           },
         }),
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => {
+        const timeoutInMilliseconds = 30000;
+        return new TimeoutInterceptor(timeoutInMilliseconds);
+      },
+      inject: [],
+    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useFactory: (configService: ConfigService) => {
+    //     const timeoutInMilliseconds = 30000;
+    //     return new TimeoutInterceptor(timeoutInMilliseconds);
+    //   },
+    //   inject: [ConfigService],
+    // },
   ],
 })
 export class AppModule {

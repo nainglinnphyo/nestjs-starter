@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ExceptionConstants } from '@core/exceptions/constants';
+import { BadRequestException } from '@core/exceptions';
 import { IResponse } from './core/interfaces/response.interface';
-import { ForbiddenException } from './core/exceptions/forbidden.exception';
 
 @Controller()
 export class AppController {
@@ -9,7 +9,7 @@ export class AppController {
 
   @Get('api')
   testException(): IResponse {
-    throw new ForbiddenException({
+    throw new BadRequestException({
       message: 'Test exception',
       cause: new Error('Test exception'),
       code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,

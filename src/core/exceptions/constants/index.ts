@@ -18,6 +18,7 @@ export class ExceptionConstants {
     INVALID_INPUT: 10016, // Invalid input
     CONFLICT_EMAIL: 10020, // Invalid input
     CONFLICT_PHONE: 10021, // Invalid input
+    REQUEST_TIME_OUT: 10021, // Invalid input
   };
 
   public static readonly UnauthorizedCodes = {
