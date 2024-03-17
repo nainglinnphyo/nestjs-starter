@@ -21,12 +21,14 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   const configService = app.get(ConfigService);
+  const tz = configService.get<string>('app.tz');
   const versionEnable = configService.get<boolean>('app.enableVersion') || true;
   const versionPrefix = configService.get<string>('app.versionPrefix') || '';
   const globalPrefix: string = configService.get<string>('app.globalPrefix') || '';
   const defaultVersion: string = configService.get<string>('app.defaultVersion') || '';
   const PORT = configService.get<number>('app.port') || 3000;
   app.setGlobalPrefix(globalPrefix);
+  process.env.TZ = tz;
   if (versionEnable) {
     app.enableVersioning({
       type: VersioningType.URI,

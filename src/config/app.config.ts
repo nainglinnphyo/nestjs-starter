@@ -11,5 +11,6 @@ export default registerAs(
     enableVersion: process.env.ENABLE_VERSION,
     versionPrefix: process.env.VERSION_PREFIX,
     defaultVersion: process.env.DEFAULT_VERSION,
+    tz: process.env.TZ,
   }),
 );
