@@ -11,7 +11,6 @@ import {
   UnauthorizedExceptionFilter,
 } from '@core/filters';
 import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
-import { AsyncLocalStorage } from 'async_hooks';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';

@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { v4 as uuidv4 } from 'uuid';
 import { ForbiddenException } from '../exceptions/forbidden.exception';
 
 @Catch(ForbiddenException)

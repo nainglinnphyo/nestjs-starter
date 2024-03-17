@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException } from '../exceptions/bad-request.exception';
 
 @Catch(BadRequestException)

@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { NotFoundException } from '@core/exceptions/not-found.exception';
-import { v4 as uuidv4 } from 'uuid';
 
 @Catch(NotFoundException)
 export class NotFoundExceptionFilter implements ExceptionFilter {

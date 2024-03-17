@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from '@core/exceptions/constants';
 import { HttpAdapterHost } from '@nestjs/core';
-import { v4 as uuidV4 } from 'uuid';
 
 interface ErrorResponse {
   response: {
