@@ -7,6 +7,7 @@ This starter kit provides a foundation for building scalable and maintainable se
 - **Nest.js Framework**: Utilizes the robust Nest.js framework for building scalable applications with TypeScript.
 - **Prisma ORM Integration**: Seamless integration with Prisma ORM for efficient database operations.
 - **Custom Exception Handling**: Implemented custom exceptions to handle errors gracefully.
+- **Router Module**: the route path for a handler is determined by concatenating the (optional) prefix declared for the controller.
 - **Exception Filters**: Added exception filters to centralize error handling and enhance application robustness.
 - **Custom Decorators**: Included custom decorator functions to extend functionality and simplify common tasks.
 
@@ -39,6 +40,7 @@ cp .env.example .env.development
 ```
 
 4. migrate and generate type
+
 ```
 yarn migrate:dev
 
