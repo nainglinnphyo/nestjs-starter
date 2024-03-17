@@ -63,10 +63,6 @@ import { RouterModule } from './modules/router.module';
       },
       inject: [],
     },
-    {
-      provide: 'async_storage',
-      useValue: new AsyncLocalStorage(),
-    },
     // {
     //   provide: APP_INTERCEPTOR,
     //   useFactory: (configService: ConfigService) => {

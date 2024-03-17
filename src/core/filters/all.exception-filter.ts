@@ -23,8 +23,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
     const specificException = exception as ErrorResponse;
     const ctx = host.switchToHttp();
+    const request = ctx.getRequest<Request>();
+    const traceId = request.headers['x-request-id'];
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    console.log(exception);
+    // console.log(exception);
     const responseBody = {
       _metadata: {
         message: specificException.response.message,
@@ -34,7 +36,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
           specificException.response.statusCode === 404
             ? ExceptionConstants.BadRequestCodes.RESOURCE_NOT_FOUND
             : ExceptionConstants.InternalServerErrorCodes.INTERNAL_SERVER_ERROR,
-        traceId: uuidV4(),
+        traceId,
         path: httpAdapter.getRequestUrl(ctx.getRequest()),
       },
     };

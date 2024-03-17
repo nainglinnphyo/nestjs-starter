@@ -15,9 +15,10 @@ export class GatewayTimeOutExceptionFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
-
+    const request = ctx.getRequest<Request>();
     const httpStatus = exception.getStatus();
-    exception.setTraceId(uuidv4());
+    const traceId = request.headers['x-request-id'];
+    exception.setTraceId(traceId);
     exception.setPath(httpAdapter.getRequestUrl(ctx.getRequest()));
 
     const responseBody = exception.generateHttpResponseBody();
