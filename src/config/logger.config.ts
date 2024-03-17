@@ -2,6 +2,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'winston-daily-rotate-file';
 import { format, transports } from 'winston';
+import * as winstonMongoDB from 'winston-mongodb';
 
 export const winstonLoggerOptions = {
   transports: [
@@ -23,6 +24,19 @@ export const winstonLoggerOptions = {
       zippedArchive: false,
       maxFiles: '30d',
     }),
+    // remove comment to log to MongoDB
+    // new winstonMongoDB.MongoDB({
+    //   level: 'info',
+    //   db: 'mongodb://localhost:27017/your-database-name',
+    //   options: {
+    //     useUnifiedTopology: true,
+    //   },
+    //   collection: 'logs',
+    //   format: format.combine(
+    //     format.timestamp(), // Add a timestamp to MongoDB logs
+    //     format.json(), // Use JSON format for MongoDB logs
+    //   ),
+    // }),
     new transports.Console({
       format: format.combine(
         format.splat(),
