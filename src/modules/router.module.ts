@@ -10,7 +10,7 @@ export class RouterModule {
       RoutesUserModule,
       NestJsRouterModule.register([
         {
-          path: 'api/user',
+          path: '/user',
           module: RoutesUserModule,
         },
       ]),

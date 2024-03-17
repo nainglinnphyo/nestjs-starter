@@ -22,6 +22,10 @@ const ENV = process.env.NODE_ENV || 'development';
         // app config
         PORT: Joi.number().default('3000').required(),
         DATABASE_URL: Joi.string().required(),
+        API_PREFIX: Joi.string().required(),
+        ENABLE_VERSION: Joi.boolean().required(),
+        VERSION_PREFIX: Joi.string().required(),
+        DEFAULT_VERSION: Joi.string().required(),
         // auth config
         AUTH_JWT_ACCESS_TOKEN_EXPIRED: Joi.string().default('15m').required(),
         AUTH_JWT_ACCESS_TOKEN_SECRET_KEY: Joi.string().alphanum().min(5).max(50).required(),

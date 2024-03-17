@@ -3,7 +3,7 @@
 // Import external modules
 import { winstonLoggerOptions } from '@config/logger.config';
 import { createDocument } from '@core/docs/swagger';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import * as cluster from 'cluster';
@@ -20,12 +20,21 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
-  createDocument(app);
   const configService = app.get(ConfigService);
-  const PORT = configService.get<number>('app.port');
-  if (!PORT) {
-    throw new Error('PORT is required to start server!');
+  const versionEnable = configService.get<boolean>('app.enableVersion') || true;
+  const versionPrefix = configService.get<string>('app.versionPrefix') || '';
+  const globalPrefix: string = configService.get<string>('app.globalPrefix') || '';
+  const defaultVersion: string = configService.get<string>('app.defaultVersion') || '';
+  const PORT = configService.get<number>('app.port') || 3000;
+  app.setGlobalPrefix(globalPrefix);
+  if (versionEnable) {
+    app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion,
+      prefix: versionPrefix,
+    });
   }
+  createDocument(app);
   await app.listen(PORT);
   logger.log(`Application listening on port ${PORT}`);
 }
