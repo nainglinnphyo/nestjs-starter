@@ -18,6 +18,7 @@ export function createDocument(app: INestApplication) {
   const username = configService.get<string>('swagger.username') ?? 'username';
   const password = configService.get<string>('swagger.password') ?? 'password';
   const appMode = configService.get<string>('app.mode');
+  // console.log(appMode)
   if (appMode !== 'development') {
     app.use(
       '/docs',
@@ -26,7 +27,7 @@ export function createDocument(app: INestApplication) {
         users: { [username]: password },
       }),
     );
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('docs', app, document);
   }
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('docs', app, document);
 }

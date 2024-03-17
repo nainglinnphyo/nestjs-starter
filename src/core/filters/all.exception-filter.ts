@@ -24,7 +24,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const specificException = exception as ErrorResponse;
     const ctx = host.switchToHttp();
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-
+    console.log(exception);
     const responseBody = {
       _metadata: {
         message: specificException.response.message,

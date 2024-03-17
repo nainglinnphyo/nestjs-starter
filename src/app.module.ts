@@ -11,13 +11,14 @@ import {
   UnauthorizedExceptionFilter,
 } from '@core/filters';
 import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
+import { AsyncLocalStorage } from 'async_hooks';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MainModule } from './modules/main.module';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
+import { RouterModule } from './modules/router.module';
 
 @Module({
-  imports: [CommonModule, MainModule],
+  imports: [CommonModule, RouterModule.forRoot()],
   controllers: [AppController],
   providers: [
     AppService,
@@ -61,6 +62,10 @@ import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
         return new TimeoutInterceptor(timeoutInMilliseconds);
       },
       inject: [],
+    },
+    {
+      provide: 'async_storage',
+      useValue: new AsyncLocalStorage(),
     },
     // {
     //   provide: APP_INTERCEPTOR,

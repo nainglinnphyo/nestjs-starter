@@ -17,6 +17,7 @@ async function bootstrap() {
     bufferLogs: true,
     logger: WinstonModule.createLogger(winstonLoggerOptions),
   });
+
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   createDocument(app);
