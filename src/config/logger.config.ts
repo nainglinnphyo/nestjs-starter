@@ -2,7 +2,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'winston-daily-rotate-file';
 import { format, transports } from 'winston';
-import * as winstonMongoDB from 'winston-mongodb';
 
 export const winstonLoggerOptions = {
   transports: [
