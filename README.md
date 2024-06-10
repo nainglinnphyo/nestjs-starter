@@ -58,3 +58,7 @@ npx prisma generate
 ```
 yarn start:dev
 ```
+
+6. View Swagger documentation
+
+Once the application is running, navigate to `/docs` to view the automatically generated Swagger documentation.

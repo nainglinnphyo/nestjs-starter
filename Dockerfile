@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Copy the .env and .env.development files
-COPY .env .env.example ./
+COPY .env* ./
 
 # Generate prisma types
 RUN npx prisma generate

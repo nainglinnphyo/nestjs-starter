@@ -7,7 +7,7 @@ import { IResponse } from './core/interfaces/response.interface';
 export class AppController {
   // constructor() {}
 
-  @Get('api')
+  @Get()
   testException(): IResponse {
     throw new BadRequestException({
       message: 'Test exception',

@@ -16,6 +16,7 @@ import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
 import { InternalServerErrorExceptionFilter } from './core/filters/internal-server.exception-filter';
+import { ValidationExceptionFilter } from './core/filters/validatin.exception-filter';
 
 @Module({
   imports: [CommonModule, RouterModule.forRoot()],
@@ -49,6 +50,10 @@ import { InternalServerErrorExceptionFilter } from './core/filters/internal-serv
     {
       provide: APP_FILTER,
       useClass: GatewayTimeOutExceptionFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationExceptionFilter,
     },
     {
       provide: APP_PIPE,

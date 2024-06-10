@@ -6,8 +6,8 @@ import { registerAs } from '@nestjs/config';
  * Change this to suit your app!
  */
 export const SWAGGER_CONFIG: SwaggerConfig = {
-  title: 'user service',
-  description: ' api specs',
+  title: 'Nest.js Starter',
+  description: ' This starter kit provides a foundation for building scalable and maintainable server-side applications using Nest.js.',
   version: '1.0',
   tags: [],
 };

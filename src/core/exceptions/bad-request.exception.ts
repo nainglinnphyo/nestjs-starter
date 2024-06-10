@@ -79,4 +79,11 @@ export class BadRequestException extends HttpException {
       },
     };
   };
+
+  static VALIDATION_ERROR = (msg?: string) => {
+    return new BadRequestException({
+      message: msg || 'Validation Error',
+      code: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
+    });
+  };
 }
