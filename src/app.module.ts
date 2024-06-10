@@ -15,6 +15,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
+import { InternalServerErrorExceptionFilter } from './core/filters/internal-server.exception-filter';
 
 @Module({
   imports: [CommonModule, RouterModule.forRoot()],
@@ -40,6 +41,10 @@ import { RouterModule } from './modules/router.module';
     {
       provide: APP_FILTER,
       useClass: ForbiddenExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: InternalServerErrorExceptionFilter,
     },
     {
       provide: APP_FILTER,
