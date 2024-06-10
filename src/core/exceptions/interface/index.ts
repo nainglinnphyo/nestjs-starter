@@ -20,7 +20,7 @@ export interface IHttpInternalServerErrorExceptionResponse {
   _metadata: {
     code: number;
     message: string;
-    description: string;
+    description?: string;
     timestamp: string;
     traceId: string;
     path: string;

@@ -15,6 +15,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
 import { RouterModule } from './modules/router.module';
+import { InternalServerErrorExceptionFilter } from './core/filters/internal-server.exception-filter';
 import { ValidationExceptionFilter } from './core/filters/validatin.exception-filter';
 
 @Module({
@@ -41,6 +42,10 @@ import { ValidationExceptionFilter } from './core/filters/validatin.exception-fi
     {
       provide: APP_FILTER,
       useClass: ForbiddenExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: InternalServerErrorExceptionFilter,
     },
     {
       provide: APP_FILTER,
