@@ -50,7 +50,7 @@ if (process.env.CLUSTERING === 'true') {
     for (let i = 0; i < numCPUs; i += 1) {
       (cluster as any).fork();
     }
-    (cluster as any).on('exit', (worker, code, signal) => {
+    (cluster as any).on('exit', (worker: any, code: any, signal: any) => {
       logger.debug(`Worker process ${worker.process.pid} exited with code ${code} and signal ${signal}`);
     });
   } else {
