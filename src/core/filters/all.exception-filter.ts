@@ -23,7 +23,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const specificException = exception as ErrorResponse;
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
-    const traceId = request.headers['x-request-id'];
+    const traceId = request.headers.get('x-request-id') || '';
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     // console.log(exception);
     const responseBody = {

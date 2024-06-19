@@ -16,7 +16,7 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const httpStatus = exception.getStatus();
-    const traceId = request.headers['x-request-id'];
+    const traceId = request.headers.get('x-request-id') || '';
     exception.setTraceId(traceId);
     exception.setPath(httpAdapter.getRequestUrl(ctx.getRequest()));
 
