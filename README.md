@@ -62,3 +62,17 @@ yarn start:dev
 6. View Swagger documentation
 
 Once the application is running, navigate to `/docs` to view the automatically generated Swagger documentation.
+
+7. Docker Support
+The Nest.js starter kit is also available on Docker for easier deployment and containerization.
+
+  1. Pull the Docker Image
+```
+docker pull devvps/nest-starter
+```
+  2. Run the Docker Container
+
+```
+docker run --env-file .env -p 3000:3000  devvps/nest-starter
+```
+Mount local machine .env and this will start the application in a Docker container, accessible on port 3000.
