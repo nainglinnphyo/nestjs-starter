@@ -13,7 +13,6 @@ export class AppController {
 
   @Get()
   async testException() {
-
     throw new BadRequestException({
       message: 'Not Allowed',
       cause: new Error('Test exception'),

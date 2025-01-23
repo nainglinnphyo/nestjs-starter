@@ -2,9 +2,9 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from './constants';
-import { IException, IHttpBadRequestExceptionResponse } from './interface';
+import { IException, IHttpGatewayTimeOutExceptionResponse } from './interface';
 
-export class BadRequestException extends HttpException {
+export class GatewayTimeoutException extends HttpException {
   @ApiProperty({
     enum: ExceptionConstants.BadRequestCodes,
     description: 'A unique code identifying the error.',
@@ -67,7 +67,7 @@ export class BadRequestException extends HttpException {
     this.path = path;
   };
 
-  generateHttpResponseBody = (message?: string): IHttpBadRequestExceptionResponse => {
+  generateHttpResponseBody = (message?: string): IHttpGatewayTimeOutExceptionResponse => {
     return {
       _metadata: {
         message: message || this.message,
@@ -78,12 +78,5 @@ export class BadRequestException extends HttpException {
         path: this.path,
       },
     };
-  };
-
-  static VALIDATION_ERROR = (msg?: string) => {
-    return new BadRequestException({
-      message: msg || 'Validation Error',
-      code: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
-    });
   };
 }

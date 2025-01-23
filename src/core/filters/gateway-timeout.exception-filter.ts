@@ -1,14 +1,14 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { BadRequestException } from '../exceptions/bad-request.exception';
+import { GatewayTimeoutException } from '../exceptions/gateway-timeout.exception';
 
-@Catch(BadRequestException)
-export class BadRequestExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(BadRequestException.name);
+@Catch(GatewayTimeoutException)
+export class GatewayTimeOutExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(GatewayTimeoutException.name);
 
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: BadRequestException, host: ArgumentsHost): void {
+  catch(exception: GatewayTimeoutException, host: ArgumentsHost): void {
     this.logger.debug('exception');
 
     const { httpAdapter } = this.httpAdapterHost;
@@ -19,6 +19,7 @@ export class BadRequestExceptionFilter implements ExceptionFilter {
     const traceId = request.headers.get('x-request-id') || '';
     exception.setTraceId(traceId);
     exception.setPath(httpAdapter.getRequestUrl(ctx.getRequest()));
+
     const responseBody = exception.generateHttpResponseBody();
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);

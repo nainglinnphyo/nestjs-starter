@@ -12,9 +12,10 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
     "strictBindCallApply": false,
+    "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
@@ -24,6 +25,8 @@
       "@common/*": ["src/core/common/*"],
       "@pagination/*": ["src/core/common/pagination/*"],
       "@shared/*": ["src/shared/*"],
-  },
-  },
+      "@exceptions/*": ["src/core/exceptions/*"],
+      "@filters/*": ["src/core/filters/*"]
+    }
+  }
 }

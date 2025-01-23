@@ -24,7 +24,7 @@ export class NotFoundException extends HttpException {
     description: 'A description of the error message.',
     example: 'The input provided was invalid',
   })
-  description: string; // Description of the exception
+  description?: string; // Description of the exception
 
   @ApiProperty({
     description: 'Timestamp of the exception',
@@ -46,15 +46,15 @@ export class NotFoundException extends HttpException {
   path: string; // Trace ID of the request
 
   constructor(exception: IException) {
-    super(exception.message, HttpStatus.BAD_REQUEST, {
+    super(exception.message, HttpStatus.NOT_FOUND, {
       cause: exception.cause,
       description: exception.description,
     });
 
     this.message = exception.message;
-    this.cause = exception.cause;
+    this.cause = exception.cause ?? new Error();
     this.description = exception.description;
-    this.code = exception.code;
+    this.code = exception.code ?? HttpStatus.NOT_FOUND;
     this.timestamp = new Date().toISOString();
   }
 
@@ -77,47 +77,5 @@ export class NotFoundException extends HttpException {
         path: this.path,
       },
     };
-  };
-
-  static HTTP_REQUEST_TIMEOUT = () => {
-    return new NotFoundException({
-      message: 'HTTP Request Timeout',
-      code: ExceptionConstants.BadRequestCodes.HTTP_REQUEST_TIMEOUT,
-    });
-  };
-
-  static RESOURCE_ALREADY_EXISTS = (msg?: string) => {
-    return new NotFoundException({
-      message: msg || 'Resource Already Exists',
-      code: ExceptionConstants.BadRequestCodes.RESOURCE_ALREADY_EXISTS,
-    });
-  };
-
-  static RESOURCE_NOT_FOUND = (msg?: string) => {
-    return new NotFoundException({
-      message: msg || 'Resource Not Found',
-      code: ExceptionConstants.BadRequestCodes.RESOURCE_NOT_FOUND,
-    });
-  };
-
-  static VALIDATION_ERROR = (msg?: string) => {
-    return new NotFoundException({
-      message: msg || 'Validation Error',
-      code: ExceptionConstants.BadRequestCodes.VALIDATION_ERROR,
-    });
-  };
-
-  static UNEXPECTED = (msg?: string) => {
-    return new NotFoundException({
-      message: msg || 'Unexpected Error',
-      code: ExceptionConstants.BadRequestCodes.UNEXPECTED_ERROR,
-    });
-  };
-
-  static INVALID_INPUT = (msg?: string) => {
-    return new NotFoundException({
-      message: msg || 'Invalid Input',
-      code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,
-    });
   };
 }

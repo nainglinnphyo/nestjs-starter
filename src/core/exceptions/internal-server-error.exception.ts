@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { ExceptionConstants } from './constants';
-import { IException } from './interface';
+import { IException, IHttpInternalServerErrorExceptionResponse } from './interface';
 
 export class CustomInternalServerErrorException extends HttpException {
   @ApiProperty({
@@ -66,7 +66,7 @@ export class CustomInternalServerErrorException extends HttpException {
     this.path = path;
   };
 
-  generateHttpResponseBody = (message?: string): any => {
+  generateHttpResponseBody = (message?: string): IHttpInternalServerErrorExceptionResponse => {
     return {
       _metadata: {
         message: message || this.message,
