@@ -1,43 +1,52 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
-import { ExceptionConstants } from '@core/exceptions/constants';
+import { Catch, ExceptionFilter, ArgumentsHost, HttpException, HttpStatus, GatewayTimeoutException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { v4 as uuidV4 } from 'uuid';
-
-interface ErrorResponse {
-  response: {
-    message: string;
-    error: string;
-    statusCode: number;
-  };
-  status: number;
-  options: Record<string, any>; // Adjust this based on the actual structure of options
-}
+import { Request } from 'express';
+import { ExceptionConstants } from '../exceptions/constants';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
-    // In certain situations `httpAdapter` might not be available in the
-    // constructor method, thus we should resolve it here.
     const { httpAdapter } = this.httpAdapterHost;
-    const specificException = exception as ErrorResponse;
     const ctx = host.switchToHttp();
-    const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+    const request = ctx.getRequest<Request>();
+    const traceId = (request.headers['x-request-id'] as string) || '';
 
-    const responseBody = {
-      _metadata: {
-        message: specificException.response.message,
-        description: specificException.response.error,
-        timestamp: new Date().toISOString(),
-        code:
-          specificException.response.statusCode === 404
-            ? ExceptionConstants.BadRequestCodes.RESOURCE_NOT_FOUND
-            : ExceptionConstants.InternalServerErrorCodes.INTERNAL_SERVER_ERROR,
-        traceId: uuidV4(),
-        path: httpAdapter.getRequestUrl(ctx.getRequest()),
-      },
-    };
+    let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    let responseBody: any;
+
+    let code =
+      exception instanceof GatewayTimeoutException
+        ? ExceptionConstants.InternalServerErrorCodes.GATE_WAY_TIME_OUT
+        : ExceptionConstants.InternalServerErrorCodes.INTERNAL_SERVER_ERROR;
+
+    if (exception instanceof HttpException) {
+      httpStatus = exception.getStatus();
+      const exceptionResponse = exception.getResponse();
+
+      responseBody = {
+        _metadata: {
+          message: 'Unknown error occurred',
+          description: (exceptionResponse as any)?.error || exception.message,
+          timestamp: new Date().toISOString(),
+          code,
+          traceId,
+          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+        },
+      };
+    } else {
+      responseBody = {
+        _metadata: {
+          message: 'Unknown error occurred',
+          description: (exception as Error)?.message || 'Unexpected error occurred',
+          timestamp: new Date().toISOString(),
+          code,
+          traceId,
+          path: httpAdapter.getRequestUrl(ctx.getRequest()),
+        },
+      };
+    }
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }
