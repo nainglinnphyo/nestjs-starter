@@ -2,7 +2,6 @@ import { Catch, ExceptionFilter, ArgumentsHost, HttpStatus, NotFoundException } 
 import { HttpAdapterHost } from '@nestjs/core';
 import { ExceptionConstants } from '../exceptions/constants';
 
-
 @Catch(NotFoundException)
 export class NotFoundExceptionFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}

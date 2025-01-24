@@ -42,7 +42,7 @@ export class ExceptionConstants {
     THIRD_PARTY_SERVICE_ERROR: 30004, // Third party service error
     SERVER_OVERLOAD: 30005, // Server is overloaded
     UNEXPECTED_ERROR: 30006, // Unexpected error occurred
-    GATE_WAY_TIME_OUT: 30007
+    GATE_WAY_TIME_OUT: 30007,
   };
 
   public static readonly ForbiddenCodes = {

@@ -2,7 +2,15 @@
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { CommonModule } from '@core/common/common.module';
 import { MiddlewareConsumer, Module, ValidationError, ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter, BadRequestExceptionFilter, ForbiddenExceptionFilter, InternalServerErrorExceptionFilter, UnauthorizedExceptionFilter, ValidationExceptionFilter, NotFoundExceptionFilter} from '@core/filters';
+import {
+  AllExceptionsFilter,
+  BadRequestExceptionFilter,
+  ForbiddenExceptionFilter,
+  InternalServerErrorExceptionFilter,
+  UnauthorizedExceptionFilter,
+  ValidationExceptionFilter,
+  NotFoundExceptionFilter,
+} from '@core/filters';
 import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';

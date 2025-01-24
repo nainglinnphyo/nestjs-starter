@@ -2,7 +2,6 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nest
 import { HttpAdapterHost } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
 import { Request } from 'express';
-import { BadRequestException } from '../exceptions/bad-request.exception';
 import { ExceptionConstants } from '../exceptions/constants';
 
 /**
@@ -23,9 +22,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const traceId = request.headers['x-request-id'];
 
-    const errorMsg = exception.constraints || exception.children?.[0]?.constraints;
-
-    const err = BadRequestException.VALIDATION_ERROR(Object.values(errorMsg || {})[0]);
     const responseBody = {
       _metadata: {
         message: "Let's take a look at validation error",

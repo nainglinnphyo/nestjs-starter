@@ -1,11 +1,11 @@
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class AppDto {
-      @IsNotEmpty()
-      @IsString()
-      data: string;
+  @IsNotEmpty()
+  @IsString()
+  data: string;
 
-      @IsNotEmpty()
-      @IsInt()
-      age: number;
+  @IsNotEmpty()
+  @IsInt()
+  age: number;
 }

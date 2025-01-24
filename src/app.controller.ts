@@ -1,5 +1,5 @@
 import { AppService } from '@app/app.service';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ExceptionConstants } from '@core/exceptions/constants';
 import { PrismaService } from '@shared/prisma/prisma.service';
 import { BadRequestException } from './core/exceptions/bad-request.exception';

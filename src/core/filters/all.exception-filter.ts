@@ -16,7 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     let responseBody: any;
 
-    let code =
+    const code =
       exception instanceof GatewayTimeoutException
         ? ExceptionConstants.InternalServerErrorCodes.GATE_WAY_TIME_OUT
         : ExceptionConstants.InternalServerErrorCodes.INTERNAL_SERVER_ERROR;
