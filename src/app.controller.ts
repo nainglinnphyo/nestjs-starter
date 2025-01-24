@@ -1,20 +1,16 @@
-import { AppService } from '@app/app.service';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ExceptionConstants } from '@core/exceptions/constants';
-import { PrismaService } from '@shared/prisma/prisma.service';
-import { BadRequestException } from './core/exceptions/bad-request.exception';
+import { BadRequestException } from '@core/exceptions';
+import { IResponse } from './core/interfaces/response.interface';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly dbService: PrismaService,
-  ) {}
+  // constructor() {}
 
   @Get()
-  async testException() {
+  testException(): IResponse {
     throw new BadRequestException({
-      message: 'Not Allowed',
+      message: 'Test exception',
       cause: new Error('Test exception'),
       code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,
       description: 'Test exception',

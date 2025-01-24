@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
-import { v4 as uuidv4 } from 'uuid';
 
 @Catch(UnauthorizedException)
 export class UnauthorizedExceptionFilter implements ExceptionFilter {
@@ -17,8 +16,8 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const httpStatus = exception.getStatus();
-
-    exception.setTraceId(uuidv4());
+    const traceId = request.headers.get('x-request-id') || '';
+    exception.setTraceId(traceId);
     exception.setPath(httpAdapter.getRequestUrl(ctx.getRequest()));
 
     const responseBody = exception.generateHttpResponseBody();
