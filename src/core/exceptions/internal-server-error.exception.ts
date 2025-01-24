@@ -3,7 +3,7 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { ExceptionConstants } from './constants';
 import { IException, IHttpInternalServerErrorExceptionResponse } from './interface';
 
-export class InternalServerErrorException extends HttpException {
+export class CustomInternalServerErrorException extends HttpException {
   @ApiProperty({
     enum: ExceptionConstants.InternalServerErrorCodes,
     description: 'A unique code identifying the error.',

@@ -36,12 +36,13 @@ export class ExceptionConstants {
   };
 
   public static readonly InternalServerErrorCodes = {
-    INTERNAL_SERVER_ERROR: 30001,
-    DATABASE_ERROR: 30002,
-    NETWORK_ERROR: 30003,
-    THIRD_PARTY_SERVICE_ERROR: 30004,
-    SERVER_OVERLOAD: 30005,
-    UNEXPECTED_ERROR: 30006,
+    INTERNAL_SERVER_ERROR: 30001, // Internal server error
+    DATABASE_ERROR: 30002, // Database error
+    NETWORK_ERROR: 30003, // Network error
+    THIRD_PARTY_SERVICE_ERROR: 30004, // Third party service error
+    SERVER_OVERLOAD: 30005, // Server is overloaded
+    UNEXPECTED_ERROR: 30006, // Unexpected error occurred
+    GATE_WAY_TIME_OUT: 30007
   };
 
   public static readonly ForbiddenCodes = {

@@ -1,7 +1,6 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, GatewayTimeoutException, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, TimeoutError, throwError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
-import { GatewayTimeoutException } from '../exceptions/gateway-timeout.exception';
 import { ExceptionConstants } from '../exceptions/constants';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class TimeoutInterceptor implements NestInterceptor {
           throw new GatewayTimeoutException({
             message: 'Gateway Timeout',
             cause: new Error('Gateway Timeout'),
-            code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,
+            code: ExceptionConstants.InternalServerErrorCodes.GATE_WAY_TIME_OUT,
             description: 'Gateway Timeout',
           });
         }

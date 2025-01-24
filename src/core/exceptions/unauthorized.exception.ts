@@ -4,6 +4,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { ExceptionConstants } from './constants';
 import { IException, IHttpUnauthorizedExceptionResponse } from './interface';
 
+
 export class UnauthorizedException extends HttpException {
   @ApiProperty({
     enum: ExceptionConstants.UnauthorizedCodes,
