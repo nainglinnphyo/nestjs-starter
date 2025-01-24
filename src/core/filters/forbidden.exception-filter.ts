@@ -1,5 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { v4 as uuidv4 } from 'uuid';
 import { ForbiddenException } from '../exceptions/forbidden.exception';
 
 @Catch(ForbiddenException)
@@ -14,9 +15,8 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
     const httpStatus = exception.getStatus();
-    const traceId = request.headers.get('x-request-id') || '';
+    const traceId = uuidv4();
     exception.setTraceId(traceId);
     exception.setPath(httpAdapter.getRequestUrl(ctx.getRequest()));
 

@@ -1,5 +1,6 @@
 import { Catch, ExceptionFilter, ArgumentsHost, HttpStatus, NotFoundException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { v4 as uuidv4 } from 'uuid';
 import { ExceptionConstants } from '../exceptions/constants';
 
 @Catch(NotFoundException)
@@ -9,8 +10,7 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
   catch(exception: NotFoundException, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
-    const traceId = request.headers['x-request-id'] as string;
+    const traceId = uuidv4();
 
     const responseBody = {
       _metadata: {

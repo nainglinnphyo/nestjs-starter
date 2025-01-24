@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ValidationError } from 'class-validator';
-import { Request } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import { ExceptionConstants } from '../exceptions/constants';
 
 /**
@@ -19,8 +19,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
 
     const ctx = host.switchToHttp();
     const httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-    const request = ctx.getRequest<Request>();
-    const traceId = request.headers['x-request-id'];
+    const traceId = uuidv4();
 
     const responseBody = {
       _metadata: {

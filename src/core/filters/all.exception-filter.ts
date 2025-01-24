@@ -1,6 +1,6 @@
 import { Catch, ExceptionFilter, ArgumentsHost, HttpException, HttpStatus, GatewayTimeoutException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { Request } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import { ExceptionConstants } from '../exceptions/constants';
 
 @Catch()
@@ -10,8 +10,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
-    const traceId = (request.headers['x-request-id'] as string) || '';
+    const traceId = uuidv4();
 
     let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     let responseBody: any;

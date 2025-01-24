@@ -28,7 +28,7 @@ async function bootstrap() {
   const versionPrefix = configService.get<string>('app.versionPrefix') || '';
   const globalPrefix: string = configService.get<string>('app.globalPrefix') || '';
   const defaultVersion: string = configService.get<string>('app.defaultVersion') || '';
-  const PORT = configService.get<number>('app.port') || 3000;
+  const PORT = configService.get<number>('app.port') || 3090;
   app.setGlobalPrefix(globalPrefix);
   process.env.TZ = tz;
   if (versionEnable) {
