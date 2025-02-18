@@ -7,7 +7,7 @@ import { SWAGGER_CONFIG } from '@config/swagger.config';
 export function createDocument(app: INestApplication) {
   const builder = new DocumentBuilder()
     .setTitle(SWAGGER_CONFIG.title)
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'authorization')
+    .addBearerAuth()
     .setDescription(SWAGGER_CONFIG.description)
     .setVersion(SWAGGER_CONFIG.version);
   SWAGGER_CONFIG.tags.forEach((tag) => {
