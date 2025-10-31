@@ -6,25 +6,31 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { ValidationPipe } from './common/pipes/validation.pipe';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { setupSwagger } from './common/swagger/swagger.config';
+import { AppConfigService } from './common/config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(AppConfigService);
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useGlobalInterceptors(
     new LoggingInterceptor(),
-    // new TransformInterceptor(),
     new TimeoutInterceptor(10000),
     new ResponseInterceptor(),
   );
 
   app.useGlobalPipes(new ValidationPipe());
 
-  // Swagger setup
-  setupSwagger(app);
+  if (configService.nodeEnv === 'development') {
+    setupSwagger(app);
+  }
 
-  await app.listen(8090);
+  const port = configService.port;
+  await app.listen(port);
   console.log(`🚀 Server running on http://localhost:8090`);
+  if (configService.nodeEnv === 'development') {
+    console.log(`📚 Swagger docs available at http://localhost:${port}/docs`);
+  }
 }
 bootstrap();

@@ -10,19 +10,37 @@ import { Observable, tap } from 'rxjs';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger('HTTP');
-
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const req = context.switchToHttp().getRequest();
-    const { method, url } = req;
-    const start = Date.now();
+    const now = Date.now();
+    const httpContext = context.switchToHttp();
+    const request = httpContext.getRequest();
+
+    const ip = this.getIP(request);
+
+    this.logger.log(
+      `Incoming Request on ${request.path}`,
+      `method=${request.method} ip=${ip}`,
+    );
 
     return next.handle().pipe(
-      tap({
-        next: () =>
-          this.logger.log(`${method} ${url} - ${Date.now() - start}ms`),
-        error: (err) =>
-          this.logger.error(`${method} ${url} - ERROR - ${err?.message}`),
+      tap(() => {
+        this.logger.log(
+          `End Request for ${request.path}`,
+          `method=${request.method} ip=${ip} duration=${Date.now() - now}ms`,
+        );
       }),
     );
+  }
+
+  private getIP(request: any): string {
+    let ip: string;
+    const ipAddr = request.headers['x-forwarded-for'];
+    if (ipAddr) {
+      const list = ipAddr.split(',');
+      ip = list[list.length - 1];
+    } else {
+      ip = request.connection.remoteAddress;
+    }
+    return ip.replace('::ffff:', '');
   }
 }
