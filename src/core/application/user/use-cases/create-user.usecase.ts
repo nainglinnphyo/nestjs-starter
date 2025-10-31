@@ -6,11 +6,12 @@ import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import { HttpStatus } from '@nestjs/common';
 import { AppException } from 'src/common/exceptions/app.exception';
 import { UserMapper } from '../mapper/user.mapper';
+import { REPOSITORY_TOKEN } from 'src/common/config/repository.config';
 
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+    @Inject(REPOSITORY_TOKEN.USER) private readonly userRepo: IUserRepository,
     private readonly prisma: PrismaService,
   ) {}
 

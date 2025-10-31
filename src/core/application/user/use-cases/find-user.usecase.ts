@@ -2,11 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '../../../domain/user/user.repository';
 import { NotFoundException } from 'src/common/exceptions/not-found.exception';
 import { UserMapper } from '../mapper/user.mapper';
+import { REPOSITORY_TOKEN } from 'src/common/config/repository.config';
 
 @Injectable()
 export class FindUserUseCase {
   constructor(
-    @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+    @Inject(REPOSITORY_TOKEN.USER) private readonly userRepo: IUserRepository,
   ) {}
 
   async execute(id: string) {

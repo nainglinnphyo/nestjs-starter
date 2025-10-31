@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AppException } from '../exceptions/app.exception';
+import { Prisma } from '@prisma/client';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -16,6 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
+    const now = Date.now();
 
     // If it's our AppException (already shaped), return as-is
     if (exception instanceof AppException) {
@@ -24,7 +26,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.logger.error(
         `${req.method} ${req.url} -> ${JSON.stringify(payload)}`,
       );
-      return res.status(status).json(payload);
+      const response =
+        typeof payload === 'object'
+          ? {
+              ...payload,
+              path: req.path,
+              duration: `${Date.now() - now}ms`,
+              method: req.method,
+            }
+          : payload;
+      return res.status(status).json(response);
     }
 
     // Nest HttpException (framework-level)
@@ -37,6 +48,30 @@ export class HttpExceptionFilter implements ExceptionFilter {
         code: 'HTTP_ERROR',
         message: (payload as any)?.message || exception.message,
         details: payload,
+        path: req.path,
+        duration: `${Date.now() - now}ms`,
+        method: req.method,
+      });
+    }
+
+    if (
+      exception instanceof Prisma.PrismaClientKnownRequestError ||
+      exception instanceof Prisma.PrismaClientValidationError ||
+      exception instanceof Prisma.PrismaClientRustPanicError ||
+      exception instanceof Prisma.PrismaClientInitializationError ||
+      exception instanceof Prisma.PrismaClientUnknownRequestError
+    ) {
+      const status = 500;
+      const payload = exception.message;
+      this.logger.error(`PRISMA EXCEPTION : ${JSON.stringify(payload)}`);
+      return res.status(status).json({
+        success: false,
+        code: 'DATABASE_ERROR',
+        message: payload,
+        details: null,
+        path: req.path,
+        duration: `${Date.now() - now}ms`,
+        method: req.method,
       });
     }
 
@@ -46,6 +81,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       success: false,
       code: 'INTERNAL_SERVER_ERROR',
       message: 'Internal server error',
+      path: req.path,
+      duration: `${Date.now() - now}ms`,
+      method: req.method,
     });
   }
 }
