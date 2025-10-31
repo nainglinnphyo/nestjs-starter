@@ -8,12 +8,16 @@ import {
 import { Request, Response } from 'express';
 import { AppException } from '../exceptions/app.exception';
 import { Prisma } from '@prisma/client';
+import { SentryExceptionCaptured } from '@sentry/nestjs';
+import * as Sentry from '@sentry/nestjs';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
+  @SentryExceptionCaptured()
   catch(exception: unknown, host: ArgumentsHost) {
+    Sentry.captureException(exception);
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
@@ -77,6 +81,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     // Unhandled -> 500
     this.logger.error('UnhandledException', exception as any);
+
     return res.status(500).json({
       success: false,
       code: 'INTERNAL_SERVER_ERROR',

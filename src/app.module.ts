@@ -6,9 +6,12 @@ import { PrismaModule } from './core/infrastructure/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { EnvSchema } from './common/config/env.schema';
 import { AppConfigService } from './common/config/config.service';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     PrismaModule,
     UserModule,
     ConfigModule.forRoot({
@@ -28,7 +31,14 @@ import { AppConfigService } from './common/config/config.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, AppConfigService],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
+    AppService,
+    AppConfigService,
+  ],
   exports: [AppConfigService],
 })
 export class AppModule {}
