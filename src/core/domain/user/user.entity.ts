@@ -1,4 +1,4 @@
-import { Email } from './user-email.vo';
+import { Email } from './value-objects/user-email.vo';
 
 export interface UserProps {
   id?: string;
@@ -35,7 +35,7 @@ export class User {
     return {
       id: this.id,
       name: this.name,
-      email: this.email.toString(),
+      email: this.email.getValue(),
       createdAt: this.props.createdAt,
       updatedAt: this.props.updatedAt,
     };

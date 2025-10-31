@@ -8,7 +8,7 @@ export class Email {
     return new Email(email.toLowerCase());
   }
 
-  toString(): string {
+  getValue(): string {
     return this.value;
   }
 }

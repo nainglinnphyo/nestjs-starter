@@ -8,9 +8,11 @@ import { ValidationPipe } from './common/pipes/validation.pipe';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { setupSwagger } from './common/swagger/swagger.config';
 import { AppConfigService } from './common/config/config.service';
-
+import { SanitizePipe } from './common/pipes/sanitize.pipe';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    forceCloseConnections: true,
+  });
   const configService = app.get(AppConfigService);
 
   app.useGlobalFilters(new HttpExceptionFilter());
@@ -21,7 +23,7 @@ async function bootstrap() {
     new ResponseInterceptor(),
   );
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe(), new SanitizePipe());
 
   if (configService.nodeEnv === 'development') {
     setupSwagger(app);

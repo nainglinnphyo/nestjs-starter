@@ -6,7 +6,7 @@ export class UserMapper {
     return {
       id: user.id!,
       name: user.name,
-      email: user.email.toString(),
+      email: user.email.getValue(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

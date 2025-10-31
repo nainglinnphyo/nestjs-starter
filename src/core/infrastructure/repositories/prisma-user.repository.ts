@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { IUserRepository } from '../../domain/user/user.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '../../domain/user/user.entity';
-import { Email } from '../../domain/user/user-email.vo';
+import { Email } from '../../domain/user/value-objects/user-email.vo';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
@@ -18,9 +19,9 @@ export class PrismaUserRepository implements IUserRepository {
     return record ? this.toDomain(record) : null;
   }
 
-  async save(user: User): Promise<User> {
+  async save(user: User, tx?: Prisma.TransactionClient): Promise<User> {
     const data = user.toPrimitives();
-    const record = await this.prisma.user.create({
+    const record = await (tx || this.prisma).user.create({
       data: {
         id: data.id,
         name: data.name,

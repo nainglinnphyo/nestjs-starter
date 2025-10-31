@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -14,7 +14,9 @@ export class PrismaService
     await this.$disconnect();
   }
 
-  async runInTransaction<T>(fn: (tx: PrismaClient) => Promise<T>): Promise<T> {
-    return this.$transaction(async (tx: PrismaClient) => fn(tx));
+  async runInTransaction<T>(
+    fn: (tx: Prisma.TransactionClient) => Promise<T>,
+  ): Promise<T> {
+    return this.$transaction(async (tx: Prisma.TransactionClient) => fn(tx));
   }
 }
