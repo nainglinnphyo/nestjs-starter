@@ -3,6 +3,7 @@ generator client {
 }
 
 datasource db {
+<<<<<<< HEAD
   provider = "sqlite"
   url      = "file:./dev.db"
 }
@@ -17,4 +18,16 @@ model Author {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+=======
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+>>>>>>> v2
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

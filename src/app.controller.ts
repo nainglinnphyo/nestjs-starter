@@ -1,16 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import { ExceptionConstants } from '@core/exceptions/constants';
-import { BadRequestException } from './core/exceptions/bad-request.exception';
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  @Get()
-  async testException() {
-    throw new BadRequestException({
-      message: 'Not Allowed',
-      cause: new Error('Test exception'),
-      code: ExceptionConstants.BadRequestCodes.INVALID_INPUT,
-      description: 'Test exception',
-    });
+  constructor(private readonly appService: AppService) {}
+
+  @Get('/debug-sentry')
+  getError() {
+    throw new Error('My first Sentry error!');
   }
 }

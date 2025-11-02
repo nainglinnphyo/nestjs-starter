@@ -1,77 +1,50 @@
-/* eslint-disable sort-imports-es6-autofix/sort-imports-es6 */
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { CommonModule } from '@core/common/common.module';
-import { MiddlewareConsumer, Module, ValidationError, ValidationPipe } from '@nestjs/common';
-import {
-  AllExceptionsFilter,
-  BadRequestExceptionFilter,
-  ForbiddenExceptionFilter,
-  InternalServerErrorExceptionFilter,
-  UnauthorizedExceptionFilter,
-  ValidationExceptionFilter,
-  NotFoundExceptionFilter,
-} from '@core/filters';
-import { RequestLoggerMiddleware } from '@core/middleware/logging.middleware';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TimeoutInterceptor } from './core/interceptors/timeout.interceptor';
-import { RouterModule } from './modules/router.module';
+import { UserModule } from './core/infrastructure/user/user.module';
+import { PrismaModule } from './core/infrastructure/prisma/prisma.module';
+import { ConfigModule } from '@nestjs/config';
+import { EnvSchema } from './common/config/env.schema';
+import { AppConfigService } from './common/config/config.service';
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { APP_FILTER } from '@nestjs/core';
+import { RequestMiddleware } from './common/middleware/request.middleware';
 
 @Module({
-  imports: [CommonModule, RouterModule.forRoot()],
+  imports: [
+    SentryModule.forRoot(),
+    PrismaModule,
+    UserModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate: (env) => {
+        const parsed = EnvSchema.safeParse(env);
+        if (!parsed.success) {
+          // Collect readable error messages
+          const errors = Object.values(parsed.error.format())
+            .map((e: any) => e?._errors?.join(', '))
+            .filter(Boolean)
+            .join('; ');
+          throw new Error(`Environment validation failed: ${errors}`);
+        }
+        return parsed.data;
+      },
+    }),
+  ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },
+
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: AllExceptionsFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: BadRequestExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: NotFoundExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: UnauthorizedExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ForbiddenExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: InternalServerErrorExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: ValidationExceptionFilter,
-    },
-    {
-      provide: APP_PIPE,
-      useFactory: () =>
-        new ValidationPipe({
-          transform: true,
-          exceptionFactory: (errors: ValidationError[]) => {
-            return errors[0];
-          },
-        }),
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useFactory: () => {
-        const timeoutInMilliseconds = 30000;
-        return new TimeoutInterceptor(timeoutInMilliseconds);
-      },
-      inject: [],
-    },
+    AppConfigService,
   ],
+  exports: [AppConfigService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+    consumer.apply(RequestMiddleware).forRoutes('*');
   }
 }
