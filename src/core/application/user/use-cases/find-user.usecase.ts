@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '../../../domain/user/user.repository';
 import { NotFoundException } from 'src/common/exceptions/not-found.exception';
 import { UserMapper } from '../mapper/user.mapper';
-import { REPOSITORY_TOKEN } from 'src/common/config/repository.config';
+import { REPOSITORY_TOKEN } from 'src/common/constant/repository.config';
 
 @Injectable()
 export class FindUserUseCase {

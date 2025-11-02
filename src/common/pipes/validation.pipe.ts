@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
+import { ERROR_CODES } from '../errors/errors.code';
 
 function flattenValidationErrors(errors: ValidationError[]): any {
   const result = {};
@@ -33,7 +34,7 @@ export class ValidationPipe implements PipeTransform<any> {
       const details = flattenValidationErrors(errors);
       throw new BadRequestException({
         success: false,
-        code: 'VALIDATION_ERROR',
+        code: ERROR_CODES.INVALID_INPUT,
         message: 'Validation failed',
         details,
       });

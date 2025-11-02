@@ -4,7 +4,7 @@ import { Email } from '../../../domain/user/value-objects/user-email.vo';
 import { User } from '../../../domain/user/user.entity';
 import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
 import { UserMapper } from '../mapper/user.mapper';
-import { REPOSITORY_TOKEN } from 'src/common/config/repository.config';
+import { REPOSITORY_TOKEN } from 'src/common/constant/repository.config';
 import { ERROR_CODES } from 'src/common/errors/errors.code';
 import { ConflictException } from 'src/common/exceptions/conflict.exception';
 import { Prisma } from '@prisma/client';

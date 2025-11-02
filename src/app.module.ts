@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './core/infrastructure/user/user.module';
@@ -8,6 +8,7 @@ import { EnvSchema } from './common/config/env.schema';
 import { AppConfigService } from './common/config/config.service';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
+import { RequestMiddleware } from './common/middleware/request.middleware';
 
 @Module({
   imports: [
@@ -36,9 +37,14 @@ import { APP_FILTER } from '@nestjs/core';
       provide: APP_FILTER,
       useClass: SentryGlobalFilter,
     },
+
     AppService,
     AppConfigService,
   ],
   exports: [AppConfigService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestMiddleware).forRoutes('*');
+  }
+}
