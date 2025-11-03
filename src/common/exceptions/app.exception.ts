@@ -1,5 +1,5 @@
-import { ERROR_CODES } from './../errors/errors.code';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { ERROR_CODES } from "@errors/errors.code";
+import { HttpException, HttpStatus } from "@nestjs/common";
 
 export interface AppErrorPayload {
   code: ERROR_CODES; // machine code e.g. 'USER_NOT_FOUND'
@@ -15,7 +15,7 @@ export class AppException extends HttpException {
 
   constructor(
     payload: AppErrorPayload,
-    status: HttpStatus = HttpStatus.BAD_REQUEST,
+    status: HttpStatus = HttpStatus.BAD_REQUEST
   ) {
     super({ success: false, ...payload }, status);
     this.code = payload.code;

@@ -3,10 +3,10 @@ import {
   Injectable,
   PipeTransform,
   BadRequestException,
-} from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { validate, ValidationError } from 'class-validator';
-import { ERROR_CODES } from '../errors/errors.code';
+} from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { validate, ValidationError } from "class-validator";
+import { ERROR_CODES } from "@errors/errors.code";
 
 function flattenValidationErrors(errors: ValidationError[]): any {
   const result = {};
@@ -15,7 +15,7 @@ function flattenValidationErrors(errors: ValidationError[]): any {
       (result as any)[err.property] = Object.values(err.constraints);
     if (err.children?.length)
       (result as any)[err.property] = flattenValidationErrors(
-        err.children as any,
+        err.children as any
       );
   }
   return result;
@@ -35,7 +35,7 @@ export class ValidationPipe implements PipeTransform<any> {
       throw new BadRequestException({
         success: false,
         code: ERROR_CODES.INVALID_INPUT,
-        message: 'Validation failed',
+        message: "Validation failed",
         details,
       });
     }

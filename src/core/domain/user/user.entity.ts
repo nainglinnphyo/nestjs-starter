@@ -1,4 +1,4 @@
-import { Email } from './value-objects/user-email.vo';
+import { Email } from "./value-objects/user-email.vo";
 
 export interface UserProps {
   id?: string;

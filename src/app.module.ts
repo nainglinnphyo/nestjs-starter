@@ -1,14 +1,14 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './core/infrastructure/user/user.module';
-import { PrismaModule } from './core/infrastructure/prisma/prisma.module';
-import { ConfigModule } from '@nestjs/config';
-import { EnvSchema } from './common/config/env.schema';
-import { AppConfigService } from './common/config/config.service';
-import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
-import { APP_FILTER } from '@nestjs/core';
-import { RequestMiddleware } from './common/middleware/request.middleware';
+import { MiddlewareConsumer, Module } from "@nestjs/common";
+import { SentryGlobalFilter, SentryModule } from "@sentry/nestjs/setup";
+import { APP_FILTER } from "@nestjs/core";
+import { PrismaModule } from "@infrastructure/prisma/prisma.module";
+import { UserModule } from "@infrastructure/user/user.module";
+import { ConfigModule } from "@nestjs/config";
+import { EnvSchema } from "@config/env.schema";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { AppConfigService } from "@config/config.service";
+import { RequestMiddleware } from "@middlewares/request.middleware";
 
 @Module({
   imports: [
@@ -17,14 +17,14 @@ import { RequestMiddleware } from './common/middleware/request.middleware';
     UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      validate: (env) => {
+      validate: env => {
         const parsed = EnvSchema.safeParse(env);
         if (!parsed.success) {
           // Collect readable error messages
           const errors = Object.values(parsed.error.format())
-            .map((e: any) => e?._errors?.join(', '))
+            .map((e: any) => e?._errors?.join(", "))
             .filter(Boolean)
-            .join('; ');
+            .join("; ");
           throw new Error(`Environment validation failed: ${errors}`);
         }
         return parsed.data;
@@ -45,6 +45,6 @@ import { RequestMiddleware } from './common/middleware/request.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RequestMiddleware).forRoutes('*');
+    consumer.apply(RequestMiddleware).forRoutes("*");
   }
 }

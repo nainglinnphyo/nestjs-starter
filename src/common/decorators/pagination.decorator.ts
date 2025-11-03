@@ -1,7 +1,7 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { validateSync } from 'class-validator';
-import { PaginationDto } from '../dto/pagination.dto';
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { validateSync } from "class-validator";
+import { PaginationDto } from "@dto/pagination.dto";
 
 export const Pagination = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): PaginationDto => {
@@ -22,11 +22,11 @@ export const Pagination = createParamDecorator(
 
     if (errors.length > 0) {
       const formatted = errors
-        .map((e) => Object.values(e.constraints || {}))
+        .map(e => Object.values(e.constraints || {}))
         .flat();
-      throw new Error(`Pagination validation failed: ${formatted.join(', ')}`);
+      throw new Error(`Pagination validation failed: ${formatted.join(", ")}`);
     }
 
     return pagination;
-  },
+  }
 );

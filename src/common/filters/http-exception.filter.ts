@@ -4,12 +4,12 @@ import {
   ArgumentsHost,
   HttpException,
   Logger,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { AppException } from '../exceptions/app.exception';
-import { Prisma } from '@prisma/client';
-import { SentryExceptionCaptured } from '@sentry/nestjs';
-import * as Sentry from '@sentry/nestjs';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { AppException } from "@exceptions/app.exception";
+import { Prisma } from "@prisma/client";
+import { SentryExceptionCaptured } from "@sentry/nestjs";
+import * as Sentry from "@sentry/nestjs";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -28,10 +28,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const status = exception.getStatus();
       const payload = exception.getResponse();
       this.logger.error(
-        `${req.method} ${req.url} -> ${JSON.stringify(payload)}`,
+        `${req.method} ${req.url} -> ${JSON.stringify(payload)}`
       );
       const response =
-        typeof payload === 'object'
+        typeof payload === "object"
           ? {
               ...payload,
               path: req.path,
@@ -49,7 +49,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.logger.error(`HttpException: ${JSON.stringify(payload)}`);
       return res.status(status).json({
         success: false,
-        code: 'HTTP_ERROR',
+        code: "HTTP_ERROR",
         message: (payload as any)?.message || exception.message,
         details: payload,
         path: req.path,
@@ -70,7 +70,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       this.logger.error(`PRISMA EXCEPTION : ${JSON.stringify(payload)}`);
       return res.status(status).json({
         success: false,
-        code: 'DATABASE_ERROR',
+        code: "DATABASE_ERROR",
         message: payload,
         details: null,
         path: req.path,
@@ -80,12 +80,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     // Unhandled -> 500
-    this.logger.error('UnhandledException', exception as any);
+    this.logger.error("UnhandledException", exception as any);
 
     return res.status(500).json({
       success: false,
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Internal server error',
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Internal server error",
       path: req.path,
       duration: `${Date.now() - now}ms`,
       method: req.method,

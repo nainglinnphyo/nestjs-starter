@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { IUserRepository } from '../../domain/user/user.repository';
-import { PrismaService } from '../prisma/prisma.service';
-import { User } from '../../domain/user/user.entity';
-import { Email } from '../../domain/user/value-objects/user-email.vo';
-import { Prisma } from '@prisma/client';
+import { User } from "@domain/user/user.entity";
+import { UserRepository } from "@domain/user/user.repository";
+import { Email } from "@domain/user/value-objects/user-email.vo";
+import { PrismaService } from "@infrastructure/prisma/prisma.service";
+import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
-export class PrismaUserRepository implements IUserRepository {
+export class PrismaUserRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<User | null> {

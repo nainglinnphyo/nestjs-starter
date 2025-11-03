@@ -16,6 +16,25 @@
     "strictBindCallApply": false,
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "baseUrl": "./",
+    "paths": {
+      "@exceptions/*": ["src/common/exceptions/*"],
+      "@config/*": ["src/common/config/*"],
+      "@constant/*": ["src/common/constant/*"],
+      "@decorators/*": ["src/common/decorators/*"],
+      "@dto/*": ["src/common/dto/*"],
+      "@errors/*": ["src/common/errors/*"],
+      "@filters/*": ["src/common/filters/*"],
+      "@guards/*": ["src/common/guards/*"],
+      "@interceptors/*": ["src/common/interceptors/*"],
+      "@middlewares/*": ["src/common/middlewares/*"],
+      "@pipes/*": ["src/common/pipes/*"],
+      "@swagger/*": ["src/common/swagger/*"],
+      "@application/*": ["src/core/application/*"],
+      "@domain/*": ["src/core/domain/*"],
+      "@infrastructure/*": ["src/core/infrastructure/*"],
+      "@presentation/*": ["src/presentation/*"]
+    }
   }
 }

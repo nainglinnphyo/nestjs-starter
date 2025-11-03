@@ -1,9 +1,9 @@
+import { CreateUserDto } from "@application/user/dtos/create-user.dto";
+import { UserResponseDto } from "@application/user/dtos/user-response.dto";
+import { CreateUserUseCase } from "@application/user/use-cases/create-user.usecase";
+import { FindUserUseCase } from "@application/user/use-cases/find-user.usecase";
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { CreateUserDto } from "../../core/application/user/dtos/create-user.dto";
-import { CreateUserUseCase } from "../../core/application/user/use-cases/create-user.usecase";
-import { FindUserUseCase } from "../../core/application/user/use-cases/find-user.usecase";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { UserResponseDto } from "../../core/application/user/dtos/user-response.dto";
 
 @Controller("users")
 export class UserController {

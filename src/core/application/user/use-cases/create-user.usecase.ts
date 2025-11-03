@@ -1,19 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { IUserRepository } from '../../../domain/user/user.repository';
-import { Email } from '../../../domain/user/value-objects/user-email.vo';
-import { User } from '../../../domain/user/user.entity';
-import { PrismaService } from '../../../infrastructure/prisma/prisma.service';
-import { UserMapper } from '../mapper/user.mapper';
-import { REPOSITORY_TOKEN } from 'src/common/constant/repository.config';
-import { ERROR_CODES } from 'src/common/errors/errors.code';
-import { ConflictException } from 'src/common/exceptions/conflict.exception';
-import { Prisma } from '@prisma/client';
+import { REPOSITORY_TOKEN } from "@constant/repository.config";
+import { User } from "@domain/user/user.entity";
+import { UserRepository } from "@domain/user/user.repository";
+import { Email } from "@domain/user/value-objects/user-email.vo";
+import { ERROR_CODES } from "@errors/errors.code";
+import { ConflictException } from "@exceptions/conflict.exception";
+import { PrismaService } from "@infrastructure/prisma/prisma.service";
+import { Inject, Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { UserMapper } from "@application/user/mapper/user.mapper";
 
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    @Inject(REPOSITORY_TOKEN.USER) private readonly userRepo: IUserRepository,
-    private readonly prisma: PrismaService,
+    @Inject(REPOSITORY_TOKEN.USER) private readonly userRepo: UserRepository,
+    private readonly prisma: PrismaService
   ) {}
 
   async execute(input: { name: string; email: string }) {
@@ -22,7 +22,7 @@ export class CreateUserUseCase {
     if (exists) {
       throw new ConflictException(
         ERROR_CODES.CONFLICT_EMAIL,
-        'User with this email already exists',
+        "User with this email already exists"
       );
     }
 
@@ -31,7 +31,7 @@ export class CreateUserUseCase {
     const created = await this.prisma.runInTransaction(
       async (tx?: Prisma.TransactionClient) => {
         return await this.userRepo.save(user, tx);
-      },
+      }
     );
     return UserMapper.toResponse(created);
   }
