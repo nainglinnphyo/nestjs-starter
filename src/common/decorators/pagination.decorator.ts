@@ -1,7 +1,7 @@
+import { PaginationDto } from "@dto/request/pagination.dto";
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
 import { validateSync } from "class-validator";
-import { PaginationDto } from "@dto/pagination.dto";
 
 export const Pagination = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): PaginationDto => {

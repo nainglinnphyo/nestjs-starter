@@ -10,8 +10,11 @@ export class PrismaUserRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<User[] | []> {
-    const record = await this.prisma.user.findMany();
-    return record ? this.toDomainList(record) : [];
+    const record = await this.prisma.user.paginate().withPages({
+      limit: 10,
+      page: 1,
+    });
+    return record ? this.toDomainList(record.data) : [];
   }
 
   async findByEmail(email: string): Promise<User | null> {

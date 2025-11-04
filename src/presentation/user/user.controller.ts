@@ -25,21 +25,21 @@ export class UserController {
     description: "User successfully created",
     type: UserResponseDto,
   })
-  async create(@Body() dto: CreateUserDto) {
+  async create(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
     return this.createUser.execute(dto);
   }
 
   @Get(":id")
   @ApiOperation({ summary: "Get user by ID" })
   @ApiCustomResponse(UserResponseDto)
-  async findById(@Param("id") id: string) {
+  async findById(@Param("id") id: string): Promise<UserResponseDto> {
     return this.findUser.execute(id);
   }
 
   @Get("")
   @ApiOperation({ summary: "Get all user" })
   @ApiPaginatedResponse(UserResponseDto)
-  async findAll() {
+  async findAll(): Promise<UserResponseDto[]> {
     return this.findAllUser.execute();
   }
 }
