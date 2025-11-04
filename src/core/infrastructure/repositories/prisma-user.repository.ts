@@ -9,6 +9,11 @@ import { Prisma } from "@prisma/client";
 export class PrismaUserRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAll(): Promise<User[] | []> {
+    const record = await this.prisma.user.findMany();
+    return record ? this.toDomainList(record) : [];
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const record = await this.prisma.user.findUnique({ where: { email } });
     return record ? this.toDomain(record) : null;
@@ -39,5 +44,9 @@ export class PrismaUserRepository implements UserRepository {
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     });
+  }
+
+  private toDomainList(records: any[]): User[] {
+    return records.map(record => this.toDomain(record));
   }
 }

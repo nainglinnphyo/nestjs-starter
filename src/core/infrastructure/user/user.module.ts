@@ -1,4 +1,5 @@
 import { CreateUserUseCase } from "@application/user/use-cases/create-user.usecase";
+import { FindAllUserUseCase } from "@application/user/use-cases/find-all-user.usecase";
 import { FindUserUseCase } from "@application/user/use-cases/find-user.usecase";
 import { REPOSITORY_TOKEN } from "@constant/repository.config";
 import { PrismaModule } from "@infrastructure/prisma/prisma.module";
@@ -13,6 +14,7 @@ import { UserController } from "@presentation/user/user.controller";
     PrismaUserRepository,
     CreateUserUseCase,
     FindUserUseCase,
+    FindAllUserUseCase,
     {
       provide: REPOSITORY_TOKEN.USER,
       useExisting: PrismaUserRepository,

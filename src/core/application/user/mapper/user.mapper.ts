@@ -11,4 +11,8 @@ export class UserMapper {
       updatedAt: new Date(),
     };
   }
+
+  static toListResponse(users: User[]): UserResponseDto[] {
+    return users.map(user => this.toResponse(user));
+  }
 }

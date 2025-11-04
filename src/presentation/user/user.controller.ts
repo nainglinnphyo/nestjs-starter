@@ -1,7 +1,12 @@
 import { CreateUserDto } from "@application/user/dtos/create-user.dto";
 import { UserResponseDto } from "@application/user/dtos/user-response.dto";
 import { CreateUserUseCase } from "@application/user/use-cases/create-user.usecase";
+import { FindAllUserUseCase } from "@application/user/use-cases/find-all-user.usecase";
 import { FindUserUseCase } from "@application/user/use-cases/find-user.usecase";
+import {
+  ApiCustomResponse,
+  ApiPaginatedResponse,
+} from "@dto/response/response.dto";
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
@@ -9,7 +14,8 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 export class UserController {
   constructor(
     private readonly createUser: CreateUserUseCase,
-    private readonly findUser: FindUserUseCase
+    private readonly findUser: FindUserUseCase,
+    private readonly findAllUser: FindAllUserUseCase
   ) {}
 
   @Post()
@@ -25,12 +31,15 @@ export class UserController {
 
   @Get(":id")
   @ApiOperation({ summary: "Get user by ID" })
-  @ApiResponse({
-    status: 200,
-    description: "User found",
-    type: UserResponseDto,
-  })
+  @ApiCustomResponse(UserResponseDto)
   async findById(@Param("id") id: string) {
     return this.findUser.execute(id);
+  }
+
+  @Get("")
+  @ApiOperation({ summary: "Get all user" })
+  @ApiPaginatedResponse(UserResponseDto)
+  async findAll() {
+    return this.findAllUser.execute();
   }
 }
